@@ -18,7 +18,7 @@ It is suggested that you (at least) briefly view the rest of the Readme. If you 
 
 ```
 ./install_blis
-./config install full
+./config install blis
 ./test_run full blis
 ```
 
