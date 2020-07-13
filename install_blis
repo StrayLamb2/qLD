@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd blis
+./configure binary_gemm
+make install
+cd ..

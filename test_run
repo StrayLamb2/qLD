@@ -1,0 +1,112 @@
+#!/bin/bash
+
+function print_help()
+{
+    message=( \ 
+        "Testing Script help\n\n" \
+        " The testing script runs the full pipeline, testing both kernels by default.\n" \
+        " \t\"help\" prints this brief manual\n" \
+        " The first argument is the type of test that you want to run:\n" \
+        " \t\"vcf\"     tests qLD-parse-VCF\n" \
+        " \t\"mdf\"     tests qLD-parse-2MDF\n" \
+        " \t\"compute\" tests qLD-compute\n" \
+        " \t\"full\"    tests all components\n\n" \ 
+        " The second argument is used only in tests that include \"compute\"\n" \
+        " It is set to \"all\" by default:\n" \
+        " \t\"blis\"     runs only using the blis kernel\n" \
+        " \t\"gpu\"      runs only using the OpenCL kernel\n" \
+        " \t\"fallback\" runs only using the fallback mode\n" \
+        " \t\"all\"      runs all previous modes\n" \
+        " An example of the default command if we used arguments:\n" \
+        " ./test_run full all\n"
+    )
+    printf "${message[*]}"
+    exit 0
+}
+
+run=${1:-full}
+mode=${2:-all}
+r2_lim=0.2
+threads=1
+vcf_dir="$(pwd)/test_dataset/vcf"
+inp_dir="$(pwd)/test_dataset/input"
+out_dir="$(pwd)/test_dataset/output"
+vcf_file="$vcf_dir/test_vcf.vcf.gz"
+inp_file=$inp_dir/covid_19
+mdf_file=$inp_dir/MDF_covid_19
+out_file=$out_dir/covid_19_report_cpu.txt
+out_g_file=$out_dir/covid_19_report_gpu.txt
+out_fb_file=$out_dir/covid_19_report_fallback.txt
+
+[[ $run = "help" ]] && print_help
+echo Testing qLD on COVID-19 dataset
+echo -------------------------------
+echo
+sleep 1
+if [[ $run = "full" || $run = "vcf" ]]
+then 
+    [ -d $inp_dir ] || mkdir -p $inp_dir
+    [ -z "$(ls -A $inp_file 2> /dev/null)" ] || rm -rf $inp_file
+    echo "Parsing VCF file with qLD-parse-VCF (needed only once per dataset)"
+    echo "-----------------------------------------------------------------"
+    ./bin/qLD-parse-VCF -input $vcf_file \
+                        -output $inp_file \
+                        -size 1 
+fi
+if [[ $run = "full" || $run = "mdf" ]]
+then
+    [ -d $inp_dir ] || mkdir -p $inp_dir
+    [ -z "$(ls -A $mdf_file 2> /dev/null)" ] || rm -rf $mdf_file
+    echo "Creating MDF files with qLD-parse-2MDF (needed only once per dataset)"
+    echo "---------------------------------------------------------------------"
+    echo
+    ./bin/qLD-parse-2MDF -input $inp_file -output $mdf_file 
+fi
+if [[ $run = "full" || $run = "compute" ]]
+then
+    echo Running Computations with the selected modes:
+    echo ---------------------------------------------
+    input="$inp_file"
+    [ -d $mdf_file ] && { mdf="-mdf"; input="$mdf_file"; }
+    [ -d $out_dir ] || mkdir -p $out_dir
+    [ -z "$(ls -A $out_dir 2> /dev/null)" ] || rm -rf $out_dir/*
+    if [[ $mode = "all" || $mode = "blis" ]]
+    then
+        echo
+        ./bin/qLD-compute \
+            -input $input \
+            -output $out_file \
+            -r2limit $r2_lim \
+            -ploidy haploid \
+            $mdf \
+            -blis \
+        2>&1 | tee $out_dir/log.txt
+    fi
+    if [[ $mode = "all" || $mode = "gpu" ]]
+    then
+        echo
+        ./bin/qLD-compute \
+            -input $input \
+            -output $out_g_file \
+            -r2limit $r2_lim \
+            -ploidy haploid \
+            $mdf \
+            -gpu \
+        2>&1 | tee $out_dir/log_gpu.txt
+    fi
+    if [[ $mode = "all" || $mode = "fallback" ]]
+    then
+        echo
+        ./bin/qLD-compute \
+            -input $input \
+            -output $out_fb_file \
+            -r2limit $r2_lim \
+            -ploidy haploid \
+            $mdf \
+        2>&1 | tee $out_dir/log_fb.txt
+    fi
+fi
+
+echo
+echo Operation finished
+exit 0

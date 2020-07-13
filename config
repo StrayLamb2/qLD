@@ -1,0 +1,127 @@
+#!/bin/bash
+
+declare -A mode_array=( [1]="blis" [2]="gpu" [3]="full" [4]="fallback" )
+declare -A modes=( [blis]="" [gpu]="" [full]="" [fallback]="" )
+
+function print_help()
+{
+    message=( \ 
+        "Configuration help\n\n" \
+        " The configuration script runs in interactive mode\n" \
+        " if an argument is missing, so feel free to run it\n" \
+        " even without arguments. Any wrong arguments will\n" \
+        " force the configuration script to exit, without\n" \
+        " causing any issues.\n\n" \
+        " The first argument is the action that you want to make:\n" \
+        " \"help\"     prints this brief manual\n" \
+        " \"install\"  takes you to the installation mode\n" \
+        " \"clean\"    deletes the binary and build files\n\n" \
+        " The second argument is used only in installation mode:\n" \
+        " \"blis\"     compiles only the blis kernel.\n" \
+        " \"gpu\"      compiles only the OpenCL kernel.\n" \
+        " \"full\"     compiles both kernels.\n" \
+        " \"fallback\" compiles without any of the kernels. (Extremely slow)\n\n" \
+        " An example that installs both kernels:\n"\
+        " ./config install full\n"
+    )
+
+    printf "${message[*]}"
+    exit 0
+}
+
+function prompt_menu()
+{
+    printf "Setup script\n------------\n\n1) Install qLD\n2) Clean files\n"
+    read -p "Choice: " choice
+    while :
+    do
+        [[ $choice = 1 || $choice = 2 ]] && break
+        read -p "Invalid choice. Retry: " choice
+    done
+    [[ $choice = 1 ]] && action="install"
+    [[ $choice = 2 ]] && action="clean"
+}
+
+function prompt_install()
+{
+    inst_message=( \
+        " Select which kernel you want to use:\n" \
+        "------------------------------------\n" \
+        "1) Blis kernel\n" \
+        "2) OpenCL (GPU) kernel\n" \
+        "3) Both kernels\n" \
+        "4) None (Fallback mode)\n" \
+    )
+    printf "${inst_message[*]}" && read -p "Choice: " choice
+    while :
+    do
+        [[ -v mode_array[$choice] ]] && break
+        read -p "Invalid choice. Retry: " choice
+    done
+    mode=${mode_array[$choice]}
+}
+
+function installation()
+{
+    [ $mode = "empty" ] && prompt_install
+    [[ -v modes[$mode] ]] || \
+    { printf "Unknown argument \"$mode\"\nTry \"./config help\" for more info\n" && exit 1 ;}
+    echo Installing mode: $mode
+    mkdir -p bin/gpu_kernel
+    cd src/correlator/ 
+    case $mode in
+        "blis")
+            make clean
+            make cblas_cpu
+            ;;
+        "gpu")
+            make clean
+            make gpu
+            ;;
+        "full")
+            make clean
+            make cblas_gpu
+            ;;
+        "fallback")
+            make clean
+            make cpu
+            ;;
+        *)
+            printf "Error with installation. Check \"./config help\" for more info\n"
+            ;;
+    esac
+
+    sleep 1
+    mv qLD-compute ../../bin/
+    cp */kernel/blislike* ../../bin/gpu_kernel/
+    cd ../parser/
+    make
+    mv qLD-parse-VCF ../../bin/
+    cd ../mdf_extension/
+    make
+    mv qLD-parse-2MDF ../../bin/
+    cd ../..
+}
+
+action=${1:-empty}
+mode=${2:-empty}
+
+[ $action = "help" ] && print_help
+[ $action = "empty" ] && prompt_menu
+[[ $action != "install" && $action != "clean" ]] && \
+{ printf "Unknown argument \"$action\"\nTry \"./config help\" for more info\n" && \
+  exit 1 ; } 
+
+case $action in
+    "install")
+        installation
+        ;;
+    "clean")
+        rm -rf bin/*
+        rm -f src/*/build/*
+        ;;
+    *)
+        echo "Error with action prompt. Check \"./config help\" for more info\n"
+        ;;
+esac
+
