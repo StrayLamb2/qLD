@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-# qLD v0.1.0: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
-=======
 # qLD v0.2.0: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
->>>>>>> Stashed changes
 
 qLD (quickLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
 
@@ -22,11 +18,7 @@ It is suggested that you (at least) briefly view the rest of the Readme. If you 
 
 ```
 ./install_blis
-<<<<<<< Updated upstream
 ./config install blis
-=======
-./config install full
->>>>>>> Stashed changes
 ./test_run full blis
 ```
 
@@ -233,11 +225,7 @@ qLD-parse-2MDF manual
 	-output output_Directory
 	-sampleList input_File
 
-<<<<<<< Updated upstream
-
-=======
 Description:
->>>>>>> Stashed changes
 	-input <STRING>		Specifies the path of the input alignment parsed files
 	-output <STRING>	Specifies the path of the output alignment directory.
 	-sampleList <STRING>	txt file with Format:
@@ -315,11 +303,7 @@ Description
 	                       "input,posWmin1,posWmin2,input2,posWmin2,posWmax2"
 	                       If single input is needed, duplicate the first 3 args.
 	-sorted                (requires input list) Sorts Input List
-
-<<<<<<< Updated upstream
-=======
 	-competing             Enables competing task queue as an optimization
->>>>>>> Stashed changes
 	-r2limit     <FLOAT>   the lowest r2 value to be included in the results (default 0.2)
 	-threads     <INT>     Number of threads to run in parallel.
 	                       Suggested to use physical core number at max.
@@ -338,13 +322,6 @@ Description
 * [BLIS](https://github.com/flame/blis) - The framework behind our CPU kernel
 * [OpenCL](https://www.khronos.org/opencl/) - The framework behind our GPU kernel
 
-<<<<<<< Updated upstream
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/StrayLamb2/diploma_thesis/tags). 
-
-=======
->>>>>>> Stashed changes
 ## Authors
 
 * **[C. Theodoris](https://github.com/StrayLamb2)**
@@ -361,8 +338,6 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * Not supported data could produce results out of range (>1). In this case we save those values as '123.456' in the report for easy tracking/removal.
 * Not supported data could produce empty reports (from trimming all the sites) without giving an error message.
 * Invalid input directories can cause unexpected behavior.
-<<<<<<< Updated upstream
-=======
 
 ## Version History
 
@@ -370,4 +345,3 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * 0.2.0:    Properly placed competing queue as an optimization flag. The new default parallelization method is to assign a region of tasks 
             in the queue to each thread.
             Minor fixes.
->>>>>>> Stashed changes
