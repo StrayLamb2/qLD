@@ -763,7 +763,9 @@ void correlate_gpu(threadData_t *threadData,
         int snp_size,
         int posWset2)
 {
-    int m=tableAsize, n=tableBsize, k=compressed_snp_size,i;
+    int m=tableAsize, n=tableBsize, k=compressed_snp_size; 
+    long long int i;
+    long long int tableCsize = (long long int)m*(long long int)n;
     int pm;     //return value used for assert
     double GFLOPS_BLIS=0.0;
     struct timeval start,end;
@@ -782,8 +784,6 @@ void correlate_gpu(threadData_t *threadData,
     pm=posix_memalign(&(Bc_pack_v), 4096,
             GPU_BLOCK_KC*GPU_BLOCK_NC*sizeof(inputDataType_x32));
     assert(!pm);
-
-    long long int tableCsize=m*n;
 
     pm=posix_memalign(&A, 4096, m*k*sizeof(inputDataType_x32) +
             m*k*sizeof(inputDataType_x32)%4096);

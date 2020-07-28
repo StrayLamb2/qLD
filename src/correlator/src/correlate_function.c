@@ -50,16 +50,33 @@ void correlate_function(threadData_t *threadData)
     table_x64 *tableData2=create_table_x64(tableSize2_s);
     helper_t *helperData=create_helper_t(threadData->ploidy);
 
+    int chunk=threadData->task_count/threadData->threadTOTAL;
+    int start=threadData->threadID*chunk;
+    int end=(threadData->threadID == threadData->threadTOTAL 
+             ? threadData->task_count
+             : (threadData->threadID+1)*chunk);
+
     while(1)
     {
 #if defined(VERBOSE) || defined(BENCHMARK)
         twc_s=gettime();
 #endif
-        // Competing queue
-        pthread_mutex_lock(&lock);
-        t_node *new_node=dequeue_task();
-        pthread_mutex_unlock(&lock);
-
+        t_node *new_node=NULL;
+        if(threadData[0].compQ == 1)
+        {
+            // Competing queue
+            pthread_mutex_lock(&lock);
+            new_node=dequeue_task();
+            pthread_mutex_unlock(&lock);
+        }
+        else
+        {
+            if(start == end)
+                break;
+            pthread_mutex_lock(&lock);
+            new_node=get_task(start++);
+            pthread_mutex_unlock(&lock);
+        }
         if(!new_node) // If we run out of tasks
             break;
 

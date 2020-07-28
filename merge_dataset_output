@@ -1,0 +1,9 @@
+#!/bin/bash
+
+input=${1:-empty}
+inp_dir=$(dirname "${input}")
+[[ $input == empty ]] && { echo "Insert basename for output file" && exit 1 ; }
+ls $input* 1> /dev/null 2>&1 || { echo "No such file found" && exit 1 ; }
+head -n 1 ${input}_1.txt > $inp_dir/report.txt
+awk FNR-1 ${input}_*.txt >> $inp_dir/report.txt
+sort -T. -t$'\t' -n -k1 -k2 $inp_dir/report.txt -o $inp_dir/report.txt

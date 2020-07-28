@@ -80,6 +80,8 @@ typedef struct{
     int gpu;
     int blis;
     int mdf;
+    int compQ;
+    int task_count;
 }threadData_t;
 
 /*
@@ -103,13 +105,17 @@ void setThreadArgs(threadData_t * threadData,
                    int ploidy,
                    int gpu,
                    int blis,
-                   int mdf);
+                   int mdf,
+                   int compQ,
+                   int task_count);
 void updateThreadArgs(threadData_t * threadData,
                       float r2limit,
                       int ploidy,
                       int gpu,
                       int blis,
-                      int mdf);
+                      int mdf,
+                      int compQ,
+                      int task_count);
 void startThreadOPS(threadData_t *threadData, int op);
 void *thread(void *x);
 void terminateWorkerThreads(pthread_t *workerThreadL, threadData_t *threadData);

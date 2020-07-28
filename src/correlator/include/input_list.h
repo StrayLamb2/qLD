@@ -70,6 +70,7 @@ void enqueue_task(char* input,
 void free_task(t_node *task);
 
 t_node* dequeue_task(void);
+t_node* get_task(int id);
 
 int create_task_queue(char *inp_list,
                       char *output_file,
@@ -78,7 +79,8 @@ int create_task_queue(char *inp_list,
                       int inPath2set,
                       int posWset1,
                       int posWset2,
-                      int mdf);
+                      int mdf,
+                      int *task_count);
 
 void strip_ext(char *fname);
 #endif

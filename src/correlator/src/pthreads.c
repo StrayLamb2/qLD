@@ -94,6 +94,8 @@ void initializeThreadData(threadData_t *cur, int i, int threads)
     cur->gpu=0;
     cur->blis=0;
     cur->mdf=0;
+    cur->compQ=0;
+    cur->task_count=0;
 }
 
 void setThreadArgs(threadData_t * threadData,
@@ -103,7 +105,9 @@ void setThreadArgs(threadData_t * threadData,
                    int ploidy,
                    int gpu,
                    int blis,
-                   int mdf)
+                   int mdf,
+                   int compQ,
+                   int task_count)
 {
 #if defined(VERBOSE) || defined(BENCHMARK)
     threadData[tid].threadLog=fopen(logname, "w");
@@ -115,6 +119,8 @@ void setThreadArgs(threadData_t * threadData,
     threadData[tid].gpu=gpu;
     threadData[tid].blis=blis;
     threadData[tid].mdf=mdf;
+    threadData[tid].compQ=compQ;  
+    threadData[tid].task_count=task_count;  
 }
 
 void updateThreadArgs(threadData_t * threadData,
@@ -122,7 +128,9 @@ void updateThreadArgs(threadData_t * threadData,
                       int ploidy,
                       int gpu,
                       int blis,
-                      int mdf)
+                      int mdf,
+                      int compQ,
+                      int task_count)
 {
 	int threadIndex=0;
     char logname[20];
@@ -158,6 +166,7 @@ void updateThreadArgs(threadData_t * threadData,
         blis=blis;
         blis_l=0;
 #endif
+
         setThreadArgs(threadData,
                       logname,
                       threadIndex,
@@ -165,7 +174,9 @@ void updateThreadArgs(threadData_t * threadData,
                       ploidy,
                       gpu_l,
                       blis_l,
-                      mdf);
+                      mdf,
+                      compQ,
+                      task_count);
     }
 }
 

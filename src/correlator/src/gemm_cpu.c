@@ -287,7 +287,7 @@ void get_pairwise_ld_score(unsigned int * tableA_bitcount,
 get_pairwise_ld_score: Entry i %d j %d greater than 1.\n\
 %u %u %lu, result = %f\n", i, j, tableA_bitcount[j], tableB_bitcount[i],
                             C[i*tableAsize+j], (*results)[i*tableAsize+j]);
-                    (*results)[i*tableAsize+j]=123.456;
+                    (*results)[i*tableAsize+j]=123.456000000;
 		        }
 	        }
 		}
@@ -324,7 +324,9 @@ void correlate(threadData_t *threadData,
                int snp_size,
                int posWset2)
 {
-	int m=tableAsize, n=tableBsize, k=compressed_snp_size, i;
+	int m=tableAsize, n=tableBsize, k=compressed_snp_size;
+    long long int i;
+    long long int tableCsize = (long long int)m*(long long int)n;
     int pm;     //return value used for assert
 	double GFLOPS_BLIS=0.0;
 	struct timeval start,end;
@@ -349,7 +351,6 @@ void correlate(threadData_t *threadData,
                          m*k*sizeof(inputDataType_x64)%4096);
     assert(!pm);
 
-    long long int tableCsize = m*n;
     pm = posix_memalign(&C, 4096, tableCsize*sizeof(inputDataType_x64) +
                         tableCsize*sizeof(inputDataType_x64)%4096);
     assert(!pm);

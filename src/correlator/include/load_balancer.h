@@ -40,6 +40,7 @@ void preprocess_data(char *inputPathName,
         int posWmax1,
         int posWmin2,
         int posWmax2,
-        int mdf);
+        int mdf,
+        int *task_count);
 
 #endif

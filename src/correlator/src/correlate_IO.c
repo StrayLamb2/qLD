@@ -284,7 +284,7 @@ void makeValidList(sample_t *sampleList,
         if(eol == 1)
             break;
     }
-    assert((validData->valid_count == sampleList->sampleListIndex) || \
+    assert((validData->valid_count <= sampleList->ploidy*sampleList->sampleListIndex) || \
            (sampleList->sampleListIndex == 0));
     free(word);
 }
@@ -444,7 +444,7 @@ void writeStateCount(outFileType fpOut,
     //FPRINT(fpOut," W2 pos\t- W1 pos\t| W2 ID\t- W1 ID\t| LD value\n");
     int cnt = 0;
 
-    FPRINT(fpOut,"W2\tW1\tID2\tID1\tNo_STATES\n");
+    FPRINT(fpOut,"POS2\tPOS1\tID2\tID1\tNo_STATES\n");
 
     for(i=0;i<tableBSize;i++)
     {

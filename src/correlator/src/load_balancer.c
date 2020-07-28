@@ -131,7 +131,8 @@ void preprocess_data(char *inputPathName,
         int posWmax1,
         int posWmin2,
         int posWmax2,
-        int mdf)
+        int mdf,
+        int *task_count)
 {
     int totalSnips=0, totalSnips2=0, snipsPerFile=0;
     int snipsPerFile2=0, posMin=0, posMax=0, posMin2=0, posMax2=0;
@@ -309,11 +310,13 @@ void preprocess_data(char *inputPathName,
                   &filesListNum2,
                   mdf);
     }
+    
+    // Count number of tasks, to use on task allocation to threads 
+    // (except in competing mode)
+    (*task_count)++;
 
 #ifdef VERBOSE
-    static int countr=-1;
-    countr++;
-    printf("Task[%d] created\n",countr);
+    printf("Task[%d] created\n",(*task_count));
 #endif
 
     enqueue_task(inputPathName,

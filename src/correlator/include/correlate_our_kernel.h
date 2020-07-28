@@ -47,5 +47,6 @@ void commandLineParser(int argc,
         int *table,
         int *threads,
         int *sorted,
-        int *mdf);
+        int *mdf,
+        int *compQ);
 #endif

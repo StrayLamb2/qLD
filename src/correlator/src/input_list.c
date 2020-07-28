@@ -148,6 +148,30 @@ t_node* dequeue_task(void)
     return NULL;
 }
 
+t_node* get_task(int id)
+{
+    if(!t_head)
+        return NULL;
+    t_node* task=t_head;
+    if(t_head->id == id)
+    {
+        task=t_head;
+        t_head=t_head->next;
+        return task;
+    }
+    if(!task->next)
+        return NULL;
+    while(task->next->id != id)
+    {
+        task=task->next;
+        if(!task->next)
+            return NULL;
+    }
+    t_node* node=task->next;
+    task->next=task->next->next;
+    return node;
+}
+
 // Function to get and validate task from the input list, to insert in the queue
 int create_task_queue(char *inp_list,
                       char *output_file,
@@ -156,7 +180,8 @@ int create_task_queue(char *inp_list,
                       int inPath2set,
                       int posWset1,
                       int posWset2,
-                      int mdf)
+                      int mdf,
+                      int *task_count)
 {
     FILE *fp;
     int ret, lineNo=0, posWmin1, posWmax1, posWmin2, posWmax2, taskno=0;
@@ -243,7 +268,8 @@ int create_task_queue(char *inp_list,
                             posWmax1,
                             posWmin2,
                             posWmax2,
-                            mdf);
+                            mdf,
+                            task_count);
 
         }
         else

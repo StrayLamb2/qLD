@@ -25,7 +25,7 @@ printf("---------------------\n");
     printf("\t-input input_Directory\n");
     printf("\t-output output_Directory\n");
     printf("\t-sampleList input_File\n");
-    printf("\n\n");
+    printf("\nDescription:\n");
     printf("\t-input <STRING>\t\tSpecifies the path of the input alignment parsed files\n");
     printf("\t-output <STRING>\tSpecifies the path of the output alignment directory.\n");
     printf("\t-sampleList <STRING>\ttxt file with Format:\n"
