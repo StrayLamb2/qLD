@@ -2,6 +2,14 @@
 
 qLD (quickLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
 
+## Related Publications
+
+[Theodoris Charalampos, Alachiotis Nikolaos, Tze Meng Low, Pavlidis Pavlos. "qLD: High-performance Computation of Linkage Disequilibrium on CPU and GPU" 2020 IEEE International Conference on Bioinformatics and Biomedicine. IEEE, 2020.]
+
+[Alachiotis Nikolaos, Thom Popovici, and Tze Meng Low. "Efficient computation of linkage disequilibria as dense linear algebra operations." 2016 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2016.](https://ieeexplore.ieee.org/abstract/document/7529898)
+
+[Binder Elliott, Tze Meng Low, and Doru Thom Popovici. "A Portable GPU Framework for SNP Comparisons." 2019 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2019.](https://ieeexplore.ieee.org/abstract/document/8778205)
+
 ## Getting Started
 
 qLD is developed and tested in Linux distributions and should only work in Linux environments. The instructions bellow will get you a copy of the project up and running on your local machine for development and testing purposes. See References for further information in the paper behind this software.
@@ -326,10 +334,9 @@ Description
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/StrayLamb2/diploma_thesis/tags). 
 
-## Authors
+## Author
 
 * **[C. Theodoris](https://github.com/StrayLamb2)**
-* **[N. Alachiotis](https://github.com/alachins)**
 
 ## License
 
