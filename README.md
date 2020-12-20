@@ -17,8 +17,8 @@ qLD is developed and tested in Linux distributions and should only work in Linux
 ### Clone the repository and get into the main directory
 
 ```
-git clone git@github.com:StrayLamb2/diploma_thesis.git
-cd diploma_thesis
+git clone git@github.com:StrayLamb2/qLD.git
+cd qLD
 ```
 
 ### TL;WR
