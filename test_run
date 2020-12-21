@@ -34,9 +34,9 @@ out_dir="$(pwd)/test_dataset/output"
 vcf_file="$vcf_dir/test_covid.vcf.gz"
 inp_file=$inp_dir/covid_19
 mdf_file=$inp_dir/MDF_covid_19
-out_file=$out_dir/covid_19_report_cpu.txt
-out_g_file=$out_dir/covid_19_report_gpu.txt
-out_fb_file=$out_dir/covid_19_report_fallback.txt
+out_file=$out_dir/blis/covid_19_report.txt
+out_g_file=$out_dir/gpu/covid_19_report.txt
+out_fb_file=$out_dir/fallback/covid_19_report.txt
 
 [[ $run = "help" ]] && print_help
 echo Testing qLD on COVID-19 dataset
@@ -47,6 +47,7 @@ if [[ $run = "full" || $run = "vcf" ]]
 then 
     [ -d $inp_dir ] || mkdir -p $inp_dir
     [ -z "$(ls -A $inp_file 2> /dev/null)" ] || rm -rf $inp_file
+    echo
     echo "Parsing VCF file with qLD-parse-VCF (needed only once per dataset)"
     echo "-----------------------------------------------------------------"
     ./bin/qLD-parse-VCF -input $vcf_file \
@@ -57,6 +58,7 @@ if [[ $run = "full" || $run = "mdf" ]]
 then
     [ -d $inp_dir ] || mkdir -p $inp_dir
     [ -z "$(ls -A $mdf_file 2> /dev/null)" ] || rm -rf $mdf_file
+    echo
     echo "Creating MDF files with qLD-parse-2MDF (needed only once per dataset)"
     echo "---------------------------------------------------------------------"
     echo
@@ -64,6 +66,7 @@ then
 fi
 if [[ $run = "full" || $run = "compute" ]]
 then
+    echo
     echo Running Computations with the selected modes:
     echo ---------------------------------------------
     input="$inp_file"
@@ -72,7 +75,9 @@ then
     [ -z "$(ls -A $out_dir 2> /dev/null)" ] || rm -rf $out_dir/*
     if [[ $mode = "all" || $mode = "blis" ]]
     then
+        [ -d $out_dir/blis ] || mkdir -p $out_dir/blis
         echo
+
         ./bin/qLD-compute \
             -input $input \
             -output $out_file \
@@ -80,10 +85,13 @@ then
             -ploidy haploid \
             $mdf \
             -blis \
-        2>&1 | tee $out_dir/log.txt
+        2>&1 | tee $out_dir/blis/log.txt
+    
+        mv thread_* $out_dir/blis 2>/dev/null; true;
     fi
     if [[ $mode = "all" || $mode = "gpu" ]]
     then
+        [ -d $out_dir/gpu ] || mkdir -p $out_dir/gpu
         echo
         ./bin/qLD-compute \
             -input $input \
@@ -92,10 +100,13 @@ then
             -ploidy haploid \
             $mdf \
             -gpu \
-        2>&1 | tee $out_dir/log_gpu.txt
+        2>&1 | tee $out_dir/gpu/log.txt
+
+        mv thread_* $out_dir/gpu 2>/dev/null; true;
     fi
     if [[ $mode = "all" || $mode = "fallback" ]]
     then
+        [ -d $out_dir/fallback ] || mkdir -p $out_dir/fallback
         echo
         ./bin/qLD-compute \
             -input $input \
@@ -103,7 +114,9 @@ then
             -r2limit $r2_lim \
             -ploidy haploid \
             $mdf \
-        2>&1 | tee $out_dir/log_fb.txt
+        2>&1 | tee $out_dir/fallback/log.txt
+
+        mv thread_* $out_dir/fallback 2>/dev/null; true;
     fi
 fi
 
