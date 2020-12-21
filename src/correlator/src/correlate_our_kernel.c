@@ -539,9 +539,13 @@ int main(int argc, char** argv)
     if(sampleListName2!=NULL)
         free(sampleListName2);
 
+    // Open file pointer for input report
+    FILE *fpInRep=fopen("input_report.txt", "w");
+
     if(inListSet == 1)
     {
-        create_task_queue(inputListName,
+        create_task_queue(fpInRep,
+                          inputListName,
                           outputFileName,
                           sampleList,
                           sampleList2,
@@ -553,7 +557,8 @@ int main(int argc, char** argv)
     }
     else
     {
-        preprocess_data(inputPathName,
+        preprocess_data(fpInRep,
+                        inputPathName,
                         inputPath2Name,
                         outputFileName,
                         sampleList,
@@ -569,6 +574,9 @@ int main(int argc, char** argv)
                         &task_count);
     }
     fflush(stdout);
+
+    // Close input report file pointer
+    fclose(fpInRep);
 
     if(sorted && inListSet)
         MergeSort(&t_head);

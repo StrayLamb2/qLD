@@ -39,8 +39,28 @@ void strip_ext(char *fname)
     }
 }
 
+void report_input(FILE *fpInRep, 
+                  int id, 
+                  int posWmin, 
+                  int posWmax, 
+                  int posWmin2, 
+                  int posWmax2,
+                  int snipSize,
+                  int snipSize2)
+{
+    int sites1=posWmax-posWmin;
+    int sites2=posWmax2-posWmin2;
+    
+    fprintf(fpInRep, "%d)\n"
+                     "\tSamples:  %10d\t%10d\n"
+                     "\tSites:    %10d\t%10d\n",
+                     id+1, snipSize, snipSize2, sites1, sites2);
+    fflush(fpInRep);
+}
+
 // Function to create and enqueue tasks
-void enqueue_task(char* input,
+void enqueue_task(FILE *fpInRep,
+                  char* input,
                   int posWmin,
                   int posWmax,
                   char* input2,
@@ -112,6 +132,15 @@ void enqueue_task(char* input,
     t_tail->filesListNum2=filesListNum2;
 
     t_tail->next=NULL;
+
+    report_input(fpInRep, 
+                 id, 
+                 posWmin, 
+                 posWmax, 
+                 posWmin2, 
+                 posWmax2,
+                 snipSize,
+                 snipSize2);
 }
 
 void free_task(t_node *task)
@@ -173,7 +202,8 @@ t_node* get_task(int id)
 }
 
 // Function to get and validate task from the input list, to insert in the queue
-int create_task_queue(char *inp_list,
+int create_task_queue(FILE *fpInRep,
+                      char *inp_list,
                       char *output_file,
                       sample_t *sampleList,
                       sample_t *sampleList2,
@@ -256,7 +286,8 @@ int create_task_queue(char *inp_list,
         if((access(input, F_OK) != -1) && (access(input2, F_OK) != -1))
         {
             taskno++;
-            preprocess_data(input,
+            preprocess_data(fpInRep,
+                            input,
                             input2,
                             output,
                             sampleList,

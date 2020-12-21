@@ -368,7 +368,8 @@ void readTable_x64(pre_t *preData,
             exit(1);
         }
 
-        fprintf(fpOut,"##fileformat=MDFv0.1\n#CHROM\tPOS\tID\tBC");
+        fprintf(fpOut,"##fileformat=MDFv0.1\n##SNPs:%d\n#CHROM\tPOS\tID\tBC",
+                tableData->tableIndex - prev_val);
         for(int k=0; k < tableData->compSize; k++)
             fprintf(fpOut,"\tcompSNP_%d",k);
         for(int j=prev_val; j < tableData->tableIndex; j++)

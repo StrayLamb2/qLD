@@ -109,11 +109,11 @@ void setThreadArgs(threadData_t * threadData,
                    int compQ,
                    int task_count)
 {
-#if defined(VERBOSE) || defined(BENCHMARK)
+//#if defined(VERBOSE) || defined(BENCHMARK)
     threadData[tid].threadLog=fopen(logname, "w");
-#else
-    logname=logname;
-#endif
+//#else
+//    logname=logname;
+//#endif
     threadData[tid].r2limit=r2limit;
     threadData[tid].ploidy=ploidy;
     threadData[tid].gpu=gpu;
@@ -136,20 +136,20 @@ void updateThreadArgs(threadData_t * threadData,
     char logname[20];
     int gpu_l=0;
     int blis_l=0;
-#if defined(VERBOSE) || defined(BENCHMARK)
+//#if defined(VERBOSE) || defined(BENCHMARK)
     char threadNo[11];
-#endif
+//#endif
 	for(threadIndex=0;threadIndex < threadData->threadTOTAL;threadIndex++)
     {
-#if defined(VERBOSE) || defined(BENCHMARK)
+//#if defined(VERBOSE) || defined(BENCHMARK)
         if(!(sprintf(threadNo,"%d",threadIndex)))
             exit(1);
         strcpy(logname,"thread_");
         strcat(logname,threadNo);
         strcat(logname,".log");
-#else
-        strcpy(logname,"");
-#endif
+//#else
+//        strcpy(logname,"");
+//#endif
 
 #ifdef GPU
         if(threadIndex == (threadData->threadTOTAL-1) && gpu)

@@ -430,7 +430,7 @@ void gpu_init(void)
         // c_sub_matrix[i]=calloc(c_buffer_size,1);
 
         // create kernels
-        kernels[i]=clCreateKernel(program, kernel_name, &err);
+        kernels[i]=clCreateKernel(program, KERNEL_NAME, &err);
         printCLErr(err,__LINE__,__FILE__);
 
         // TODO: might have to move this inside the loops depending on
@@ -693,7 +693,7 @@ void gpu_gemm(unsigned int m,
     // more timing stuff
 #ifdef VERBOSE
     cl_double kernelExecTimeMs=(cl_double)p_total*(cl_double)(1e-09);
-    printf("\nopencl kernel (%s): %lf seconds\n", kernel_name, kernelExecTimeMs);
+    printf("\nopencl kernel (%s): %lf seconds\n", KERNEL_NAME, kernelExecTimeMs);
 #endif
 }
 

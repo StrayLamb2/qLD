@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dataSize=${1:-empty}
+blockSize=${2:-empty}
+
+echo "$(bc -l <<< "scale=0;(sqrt(2*$dataSize/$blockSize-0.45))/1")"
+

@@ -369,5 +369,6 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * 0.1.0:    Initial Release
 * 0.2.0:    Properly placed competing queue as an optimization flag. The new default parallelization method is to assign a region of tasks 
             in the queue to each thread.
+            Made config script compatible with older bash versions.
             Minor fixes.
 >>>>>>> Stashed changes

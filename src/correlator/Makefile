@@ -2,7 +2,7 @@
 
 CC = gcc
 
-CMUFLAGS = -mfpmath=sse -fPIC
+CMUFLAGS = -mfpmath=sse -fPIC #-DVERBOSE
 
 WFLAGS= -Wmissing-prototypes -Wall -Wextra #-Wstrict-prototypes
 

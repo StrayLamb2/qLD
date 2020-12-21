@@ -5,9 +5,9 @@ LANG=en_US
 
 input=$1
 threads=$2
-output=${3:-input_list.txt}
-pos_min=$4
-pos_max=$5
+pos_min=$3
+pos_max=$4
+output=${5:-input_list.txt}
 sets=()
 factor=1
 
@@ -22,11 +22,11 @@ pieces=$((factor * threads - 1))
 min=$pos_min
 for i in $(seq 1 $pieces)
 do
-    max=$(( split * i + min ))
+    max=$(( split + min ))
     sets+=("$input,$min,$max")
     min=$(( max + 1 ))
 done
-sets+=("$input,$min,$(( snips + min ))")
+sets+=("$input,$min,$pos_max")
 
 # write input list to file
 printf "" > $output

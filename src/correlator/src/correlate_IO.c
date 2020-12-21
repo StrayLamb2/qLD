@@ -404,7 +404,7 @@ void writeResults(outFileType fpOut,
         if(posWset2 == 0) cnt++;
         for(j=cnt;j<tableASize;j++)
         {
-            if(results[i*tableASize+j] >= r2limit)
+            if(results[i*tableASize+j] >= r2limit && results[i*tableASize+j] < 100)
             {
                 //FPRINT(fpOut,"%u\t%u\t%s\t%s\t%.3f\t%.3f\t%1.5e\n",
                 //       table_B_posIndex[i],table_A_posIndex[j],tableB_IDindex[i],

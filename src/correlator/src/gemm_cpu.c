@@ -92,11 +92,11 @@ void dgemm_ref(int k,
             {
                 ai = *(a + i);
                 if(sizeof(inputDataType_x64) <= 4)
-abij[0] += __builtin_popcount(ai & bj);
+                    abij[0] += __builtin_popcount(ai & bj);
                 else if(sizeof(inputDataType_x64) < 8)
-abij[0] += __builtin_popcountl(ai & bj);
+                    abij[0] += __builtin_popcountl(ai & bj);
                 else if(sizeof(inputDataType_x64) >= 8)
-abij[0] += __builtin_popcountll(ai & bj);
+                    abij[0] += __builtin_popcountll(ai & bj);
                 abij++;
             }
         }
@@ -154,20 +154,20 @@ void blis_gemm(unsigned int M,
     //    printf("\n");
     //}
 
-    for (unsigned int jc=0; jc<N; jc+=BLOCK_NC)
+    for(unsigned int jc=0; jc<N; jc+=BLOCK_NC)
 	{
 		unsigned int n_alg=fmin(BLOCK_NC,N-jc);
-		for (unsigned int pc=0; pc<K; pc+=BLOCK_KC)
+		for(unsigned int pc=0; pc<K; pc+=BLOCK_KC)
 		{
 			unsigned int k_alg=fmin(BLOCK_KC,K-pc);
 
 			Bc=&b[pc+jc*K];
-			for (unsigned int ic=0; ic<M; ic+=BLOCK_MC)
+			for(unsigned int ic=0; ic<M; ic+=BLOCK_MC)
 			{
 				unsigned int m_alg=fmin(BLOCK_MC,M-ic);
 				Ac=&a[ic+pc*M];
 				Cc=&c[ic+jc*M];
-                if((m_alg != 1) && (n_alg != 1) && (k_alg != 1))
+                if((m_alg != 1)) //&& (n_alg != 1) && (k_alg != 1))
                 {
                     cblas_dgemm(CblasColMajor,
                                 CblasNoTrans,
@@ -184,10 +184,34 @@ void blis_gemm(unsigned int M,
                                 (double*)Cc,
                                 M);
                 }
+                //else if((m_alg == 1) && (n_alg != 1))
+                //{
+                    //cblas_dgemv(CblasColMajor,
+                    //            CblasNoTrans,
+                    //            m_alg,
+                    //            k_alg,
+                    //            (double)alphap,
+                    //            (double*)Ac,
+                    //            M,
+                    //            (double*)Bc,
+                    //            K,
+                    //            0.0,
+                    //            (double*)Cc,
+                    //            M);
+
+                    //fprintf(stderr, "This is the PITA case... Aborting from life\n");
+                    //exit(1);
+                //}
+                else if(m_alg == 1)
+                {
+                    dgemm_ref(k_alg,m_alg,n_alg,alphap,Ac,Bc,Cc,1,M);
+                    //fprintf(stderr,"Ref case\n");
+                }
                 else
                 {
-                    fprintf(stderr, "This is the PITA case... Aborting from life\n");
-                    exit(1);
+                    fprintf(stderr,"Trully unfortunate case. Please submit a ticket to the "
+                           "repo at https://www.github.com/StrayLamb2/qLD "
+                           "stating this message\n");
                 }
    			}
    		}
@@ -283,10 +307,10 @@ void get_pairwise_ld_score(unsigned int * tableA_bitcount,
 
                 if((*results)[i*tableAsize+j]>1.0001)
 		        {
-			        fprintf(stderr, "qLD-compute: gemm_cpu.c:247: \
-get_pairwise_ld_score: Entry i %d j %d greater than 1.\n\
-%u %u %lu, result = %f\n", i, j, tableA_bitcount[j], tableB_bitcount[i],
-                            C[i*tableAsize+j], (*results)[i*tableAsize+j]);
+//			        fprintf(stderr, "qLD-compute: gemm_cpu.c:247: \
+//get_pairwise_ld_score: Entry i %d j %d greater than 1.\n\
+//%u %u %lu, result = %f\n", i, j, tableA_bitcount[j], tableB_bitcount[i],
+//                            C[i*tableAsize+j], (*results)[i*tableAsize+j]);
                     (*results)[i*tableAsize+j]=123.456000000;
 		        }
 	        }

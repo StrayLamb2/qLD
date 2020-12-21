@@ -119,7 +119,8 @@ void MergeSort(t_node** head)
     *head = SortedMerge(a, b);
 }
 
-void preprocess_data(char *inputPathName,
+void preprocess_data(FILE *fpInRep,
+        char *inputPathName,
         char *inputPath2Name,
         char *outputFileName,
         sample_t *sampleList,
@@ -259,7 +260,11 @@ void preprocess_data(char *inputPathName,
     }
 
     //little hack for correct output format in split-file inputLists.
-    if(inPath2set == 1 && posWset2 == 1 && posWmin1 == posWmin2 && posWmax1 == posWmax2)
+    if(inPath2set == 1 && 
+       posWset1 == 1 &&
+       posWset2 == 1 && 
+       posWmin1 == posWmin2 && 
+       posWmax1 == posWmax2)
         posWset2=0;
 
     //this check is needed if the parser is given a large enough file size that the
@@ -319,7 +324,8 @@ void preprocess_data(char *inputPathName,
     printf("Task[%d] created\n",(*task_count));
 #endif
 
-    enqueue_task(inputPathName,
+    enqueue_task(fpInRep,
+                 inputPathName,
                  posWmin1,
                  posWmax1,
                  inputPath2Name,

@@ -77,10 +77,6 @@ typedef FILE* outFileType;
 #define FCLOZE_OUT fclose
 #endif
 
-#define PROGRAM_FILE "bin/gpu_kernel/blislike.cl"
-#define kernel_name "blis_like8x4"
-#define RESULTS_PART_SIZE_GPU 4 //2*2
-
 enum gemm_block_sizes_e
 {
     BLOCK_NC=4032,
@@ -95,7 +91,7 @@ enum various_sizes_e
     FILEBUFFERSIZE=1024*32,
     GENOMESIZE_D=2,
     BUFFERSIZE=1024,
-    BUFFER_INCR=128,
+    BUFFER_INCR=256,
     INFILENAMESIZE=1024,
     STRINGLENGTH=1024,
     IDLENGTH=256,
