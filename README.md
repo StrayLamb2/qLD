@@ -330,10 +330,6 @@ Description
 * [BLIS](https://github.com/flame/blis) - The framework behind our CPU kernel
 * [OpenCL](https://www.khronos.org/opencl/) - The framework behind our GPU kernel
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/StrayLamb2/diploma_thesis/tags). 
-
 ## Author
 
 * **[C. Theodoris](https://github.com/StrayLamb2)**
@@ -347,5 +343,4 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * Loading files in *qLD-compute* is not yet memory optimized and should hog good chunks of memory in big files/large inputLists.
 * Consecutive runs with the same output name are not overwritting the old data, neither prompt the user, so use different output names or (re)move the old files    before re-using the name.
 * Not supported data could produce results out of range (>1). In this case we save those values as '123.456' in the report for easy tracking/removal.
-* Not supported data could produce empty reports (from trimming all the sites) without giving an error message.
 * Invalid input directories can cause unexpected behavior.
