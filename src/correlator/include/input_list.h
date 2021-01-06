@@ -44,7 +44,17 @@ typedef struct node_s{
 
 EXTERN_INP t_node *t_head, *t_tail;
 
-void enqueue_task(char* input,
+void report_input(FILE *fpInRep, 
+                  int id, 
+                  int posWmin, 
+                  int posWmax, 
+                  int posWmin2, 
+                  int posWmax2,
+                  int snipSize,
+                  int snipSize2);
+
+void enqueue_task(FILE *fpInRep,
+                  char* input,
                   int posWmin,
                   int posWmax,
                   char* input2,
@@ -70,15 +80,18 @@ void enqueue_task(char* input,
 void free_task(t_node *task);
 
 t_node* dequeue_task(void);
+t_node* get_task(int id);
 
-int create_task_queue(char *inp_list,
+int create_task_queue(FILE *fpInRep,
+                      char *inp_list,
                       char *output_file,
                       sample_t * sampleList,
                       sample_t * sampleList2,
                       int inPath2set,
                       int posWset1,
                       int posWset2,
-                      int mdf);
+                      int mdf,
+                      int *task_count);
 
 void strip_ext(char *fname);
 #endif

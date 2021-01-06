@@ -39,8 +39,28 @@ void strip_ext(char *fname)
     }
 }
 
+void report_input(FILE *fpInRep, 
+                  int id, 
+                  int posWmin, 
+                  int posWmax, 
+                  int posWmin2, 
+                  int posWmax2,
+                  int snipSize,
+                  int snipSize2)
+{
+    int sites1=posWmax-posWmin;
+    int sites2=posWmax2-posWmin2;
+    
+    fprintf(fpInRep, "%d)\n"
+                     "\tSamples:  %10d\t%10d\n"
+                     "\tSites:    %10d\t%10d\n",
+                     id+1, snipSize, snipSize2, sites1, sites2);
+    fflush(fpInRep);
+}
+
 // Function to create and enqueue tasks
-void enqueue_task(char* input,
+void enqueue_task(FILE *fpInRep,
+                  char* input,
                   int posWmin,
                   int posWmax,
                   char* input2,
@@ -112,6 +132,15 @@ void enqueue_task(char* input,
     t_tail->filesListNum2=filesListNum2;
 
     t_tail->next=NULL;
+
+    report_input(fpInRep, 
+                 id, 
+                 posWmin, 
+                 posWmax, 
+                 posWmin2, 
+                 posWmax2,
+                 snipSize,
+                 snipSize2);
 }
 
 void free_task(t_node *task)
@@ -148,15 +177,41 @@ t_node* dequeue_task(void)
     return NULL;
 }
 
+t_node* get_task(int id)
+{
+    if(!t_head)
+        return NULL;
+    t_node* task=t_head;
+    if(t_head->id == id)
+    {
+        task=t_head;
+        t_head=t_head->next;
+        return task;
+    }
+    if(!task->next)
+        return NULL;
+    while(task->next->id != id)
+    {
+        task=task->next;
+        if(!task->next)
+            return NULL;
+    }
+    t_node* node=task->next;
+    task->next=task->next->next;
+    return node;
+}
+
 // Function to get and validate task from the input list, to insert in the queue
-int create_task_queue(char *inp_list,
+int create_task_queue(FILE *fpInRep,
+                      char *inp_list,
                       char *output_file,
                       sample_t *sampleList,
                       sample_t *sampleList2,
                       int inPath2set,
                       int posWset1,
                       int posWset2,
-                      int mdf)
+                      int mdf,
+                      int *task_count)
 {
     FILE *fp;
     int ret, lineNo=0, posWmin1, posWmax1, posWmin2, posWmax2, taskno=0;
@@ -231,7 +286,8 @@ int create_task_queue(char *inp_list,
         if((access(input, F_OK) != -1) && (access(input2, F_OK) != -1))
         {
             taskno++;
-            preprocess_data(input,
+            preprocess_data(fpInRep,
+                            input,
                             input2,
                             output,
                             sampleList,
@@ -243,7 +299,8 @@ int create_task_queue(char *inp_list,
                             posWmax1,
                             posWmin2,
                             posWmax2,
-                            mdf);
+                            mdf,
+                            task_count);
 
         }
         else

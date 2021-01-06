@@ -22,8 +22,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "header.h"
 #include "pthreads.h"
 
+#define PROGRAM_FILE "bin/gpu_kernel/blislike.cl"
+#define KERNEL_NAME "blis_like8x4"
+#define RESULTS_PART_SIZE_GPU 4 //2*2
+
 // macro define needed for deprecated warning
+#define CL_TARGET_OPENCL_VERSION 120
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+
 #include <CL/cl.h>
 #define DOUBLE unsigned int
 

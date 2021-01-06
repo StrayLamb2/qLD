@@ -50,16 +50,33 @@ void correlate_function(threadData_t *threadData)
     table_x64 *tableData2=create_table_x64(tableSize2_s);
     helper_t *helperData=create_helper_t(threadData->ploidy);
 
+    int chunk=threadData->task_count/threadData->threadTOTAL;
+    int start=threadData->threadID*chunk;
+    int end=(threadData->threadID == threadData->threadTOTAL 
+             ? threadData->task_count
+             : (threadData->threadID+1)*chunk);
+
     while(1)
     {
 #if defined(VERBOSE) || defined(BENCHMARK)
         twc_s=gettime();
 #endif
-        // Competing queue
-        pthread_mutex_lock(&lock);
-        t_node *new_node=dequeue_task();
-        pthread_mutex_unlock(&lock);
-
+        t_node *new_node=NULL;
+        if(threadData[0].compQ == 1)
+        {
+            // Competing queue
+            pthread_mutex_lock(&lock);
+            new_node=dequeue_task();
+            pthread_mutex_unlock(&lock);
+        }
+        else
+        {
+            if(start == end)
+                break;
+            pthread_mutex_lock(&lock);
+            new_node=get_task(start++);
+            pthread_mutex_unlock(&lock);
+        }
         if(!new_node) // If we run out of tasks
             break;
 
@@ -121,7 +138,8 @@ void correlate_function(threadData_t *threadData)
         }
 
         // Fill nodeData struct for input1
-        nodeData->tableSize=new_node->posWmax-new_node->posWmin;
+        //TODO: nodeData->tableSize TO BE REMOVED
+        nodeData->tableSize=1000;
         nodeData->filesList=new_node->filesList;
         nodeData->filesListNum=new_node->filesListNum;
         nodeData->snipSize=new_node->snipSize;
@@ -149,7 +167,7 @@ void correlate_function(threadData_t *threadData)
         if(new_node->inPath2set == 1)
         {
             // Fill nodeData struct for input2
-            nodeData2->tableSize=new_node->posWmax2-new_node->posWmin2;
+            nodeData2->tableSize=1000;
             nodeData2->filesList=new_node->filesList2;
             nodeData2->filesListNum=new_node->filesListNum2;
             nodeData2->snipSize=new_node->snipSize2;
@@ -176,10 +194,10 @@ void correlate_function(threadData_t *threadData)
         else if(new_node->posWset2 == 1)
         {
             // Fill nodeData struct for input2
-            nodeData2->tableSize=new_node->posWmax-new_node->posWmin;
-            nodeData2->filesList=new_node->filesList;
-            nodeData2->filesListNum=new_node->filesListNum;
-            nodeData2->snipSize=new_node->snipSize;
+            nodeData2->tableSize=1000;
+            nodeData2->filesList=new_node->filesList2;
+            nodeData2->filesListNum=new_node->filesListNum2;
+            nodeData2->snipSize=new_node->snipSize2;
             nodeData2->headerLine1=new_node->headerLine1;
             nodeData2->headerLine2=new_node->headerLine2;
             nodeData2->posWmin=new_node->posWmin2;
@@ -193,7 +211,7 @@ void correlate_function(threadData_t *threadData)
             tableData2->tableIndex=0;
             tableData2->compSize=compSize;
             tableData2->compIndex=0;
-            
+
             // Read tableB from input files to memory
             readTable_x64(threadData,
                           nodeData2,
@@ -270,6 +288,7 @@ void correlate_function(threadData_t *threadData)
 
 #endif
         }
+
 #if defined(VERBOSE) || defined(BENCHMARK)
         time3=gettime();
         if(new_node->posWset2 == 0 && new_node->inPath2set == 0)
@@ -296,6 +315,34 @@ void correlate_function(threadData_t *threadData)
             fprintf(threadData->threadLog, "----------------------------------------\n\n");
 
         }
+#else
+        int smpls=0, snps=0, skipped=0;
+        int smpls2=0, snps2=0, skipped2=0;
+
+        // TODO: Make bins to count how many of the samples in list are present 
+        //       in the actual vcf
+        smpls=nodeData->valid_count;
+        snps=tableData->tableIndex;
+        skipped=nodeData->posWmax-nodeData->posWmin-snps;
+        if(new_node->inPath2set == 1 || new_node->posWset2 == 1)
+        {
+            smpls2=nodeData2->valid_count;
+            snps2=tableData2->tableIndex;
+            skipped2=nodeData2->posWmax-nodeData2->posWmin-snps2;
+        }
+        else
+        {
+            smpls2=smpls;
+            snps2=snps;
+            skipped2=skipped;
+        }
+
+        fprintf(threadData->threadLog,
+                "%d)\n"
+                "\tSamples:   %10d\t%10d\n"
+                "\tSNPs:      %10d\t%10d\n"
+                "\tSkipped:   %10d\t%10d\n",
+                new_node->id+1, smpls, smpls2, snps, snps2, skipped, skipped2);
 #endif
         // Free and close task-centric allocated space and files
         fflush(fpOut);

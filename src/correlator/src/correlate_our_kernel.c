@@ -119,6 +119,7 @@ void printHelp(void)
            "\t                       \"input,posWmin1,posWmin2,input2,posWmin2,posWmax2\"\n"
            "\t                       If single input is needed, duplicate the first 3 args.\n"
            "\t-sorted                (requires input list) Sorts Input List\n\n"
+           "\t-competing             Enables competing task queue as an optimization\n"
            "\t-r2limit     <FLOAT>   the lowest r2 value to be included in the results (default 0.2)\n"
            "\t-threads     <INT>     Number of threads to run in parallel.\n"
            "\t                       Suggested to use physical core number at max.\n"
@@ -163,7 +164,8 @@ void commandLineParser(int argc,
         int *table,
         int *threads,
         int *sorted,
-        int *mdf)
+        int *mdf,
+        int *compQ)
 {
     int i, pathSet=0, fileSet=0, sampleListSet=0, sampleList2Set=0;
     if(argc < 2)
@@ -411,6 +413,14 @@ void commandLineParser(int argc,
             continue;
         }
 
+        if(!strcmp(argv[i], "-competing"))
+        {
+            printf("\t%s\n", argv[i]);
+            fflush(stdout);
+            *compQ=1;
+            continue;
+        }
+
         fprintf(stderr, "\nERROR: %s is not a valid command line parameter\n\n",argv[i]);
         fflush(stderr);
         exit(1);
@@ -460,8 +470,9 @@ int main(int argc, char** argv)
 
     int inPath2set=0, posWmin1=0, posWmax1=0, posWset1=0;
     int posWmin2=0, posWmax2=0, posWset2=0;
-    int inListSet=0, gpu=0, blis=0, rTable=0, threads=1, sorted=0, mdf=0;
+    int inListSet=0, gpu=0, blis=0, rTable=0, threads=1, sorted=0, mdf=0, compQ=0;
     int ploidy=0;
+    int task_count=0;
     float r2limit = 0.2;
     char inputPathName[INFILENAMESIZE]="";
     char inputPath2Name[INFILENAMESIZE]="";
@@ -493,7 +504,8 @@ int main(int argc, char** argv)
             &rTable,
             &threads,
             &sorted,
-            &mdf);
+            &mdf,
+            &compQ);
 
 //#if defined(VERBOSE) || defined(BENCHMARK)
 //    double prep_time_s=gettime();
@@ -509,6 +521,14 @@ int main(int argc, char** argv)
     {
         printf("MDF input active\n");
     }
+    if(compQ)
+    {
+        printf("Competing task queue on threads active\n");
+    }
+    if(sorted)
+    {
+        printf("Sorted task queue active\n");
+    }
 //#endif
     sample_t *sampleList=create_sample_t(BUFFERSIZE,ploidy);
     sample_t *sampleList2=create_sample_t(BUFFERSIZE,ploidy);
@@ -519,20 +539,26 @@ int main(int argc, char** argv)
     if(sampleListName2!=NULL)
         free(sampleListName2);
 
+    // Open file pointer for input report
+    FILE *fpInRep=fopen("input_report.txt", "w");
+
     if(inListSet == 1)
     {
-        create_task_queue(inputListName,
+        create_task_queue(fpInRep,
+                          inputListName,
                           outputFileName,
                           sampleList,
                           sampleList2,
                           inPath2set,
                           posWset1,
                           posWset2,
-                          mdf);
+                          mdf,
+                          &task_count);
     }
     else
     {
-        preprocess_data(inputPathName,
+        preprocess_data(fpInRep,
+                        inputPathName,
                         inputPath2Name,
                         outputFileName,
                         sampleList,
@@ -544,9 +570,13 @@ int main(int argc, char** argv)
                         posWmax1,
                         posWmin2,
                         posWmax2,
-                        mdf);
+                        mdf,
+                        &task_count);
     }
     fflush(stdout);
+
+    // Close input report file pointer
+    fclose(fpInRep);
 
     if(sorted && inListSet)
         MergeSort(&t_head);
@@ -579,7 +609,7 @@ int main(int argc, char** argv)
         pthread_create(&workerThread[i-1],NULL,thread,(void *)(&threadData[i]));
     }
 
-    updateThreadArgs(&threadData[0], r2limit, ploidy, gpu, blis, mdf);
+    updateThreadArgs(&threadData[0], r2limit, ploidy, gpu, blis, mdf, compQ, task_count);
     startThreadOPS(threadData, CORRELATE);
     terminateWorkerThreads(workerThread,threadData);
     sense_reversal_barrier_destroy();

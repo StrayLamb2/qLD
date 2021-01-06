@@ -284,7 +284,7 @@ void makeValidList(sample_t *sampleList,
         if(eol == 1)
             break;
     }
-    assert((validData->valid_count == sampleList->sampleListIndex) || \
+    assert((validData->valid_count <= sampleList->ploidy*sampleList->sampleListIndex) || \
            (sampleList->sampleListIndex == 0));
     free(word);
 }
@@ -404,7 +404,7 @@ void writeResults(outFileType fpOut,
         if(posWset2 == 0) cnt++;
         for(j=cnt;j<tableASize;j++)
         {
-            if(results[i*tableASize+j] >= r2limit)
+            if(results[i*tableASize+j] >= r2limit && results[i*tableASize+j] < 100)
             {
                 //FPRINT(fpOut,"%u\t%u\t%s\t%s\t%.3f\t%.3f\t%1.5e\n",
                 //       table_B_posIndex[i],table_A_posIndex[j],tableB_IDindex[i],
@@ -444,7 +444,7 @@ void writeStateCount(outFileType fpOut,
     //FPRINT(fpOut," W2 pos\t- W1 pos\t| W2 ID\t- W1 ID\t| LD value\n");
     int cnt = 0;
 
-    FPRINT(fpOut,"W2\tW1\tID2\tID1\tNo_STATES\n");
+    FPRINT(fpOut,"POS2\tPOS1\tID2\tID1\tNo_STATES\n");
 
     for(i=0;i<tableBSize;i++)
     {

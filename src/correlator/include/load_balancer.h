@@ -28,7 +28,8 @@ void FrontBackSplit(t_node* source, t_node** frontRef,
 
 void MergeSort(t_node** head);
 
-void preprocess_data(char *inputPathName,
+void preprocess_data(FILE *fpInRep,
+        char *inputPathName,
         char *inputPath2Name,
         char *outputFileName,
         sample_t *sampleList,
@@ -40,6 +41,7 @@ void preprocess_data(char *inputPathName,
         int posWmax1,
         int posWmin2,
         int posWmax2,
-        int mdf);
+        int mdf,
+        int *task_count);
 
 #endif

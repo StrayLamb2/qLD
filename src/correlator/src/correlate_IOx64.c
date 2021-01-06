@@ -453,7 +453,6 @@ void readTable_x64(threadData_t *threadData,
     }
 
 #ifdef VERBOSE
-    fprintf(threadData[0].threadLog, "Skipped Lines: %d\n", skippedLines);
     fprintf(threadData[0].threadLog, "Table %d Depth:%d, Width:%d\n", nodeData->id,
                                             tableData->tableSize, tableData->compSize);
 #else

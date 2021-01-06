@@ -430,7 +430,7 @@ void gpu_init(void)
         // c_sub_matrix[i]=calloc(c_buffer_size,1);
 
         // create kernels
-        kernels[i]=clCreateKernel(program, kernel_name, &err);
+        kernels[i]=clCreateKernel(program, KERNEL_NAME, &err);
         printCLErr(err,__LINE__,__FILE__);
 
         // TODO: might have to move this inside the loops depending on
@@ -693,7 +693,7 @@ void gpu_gemm(unsigned int m,
     // more timing stuff
 #ifdef VERBOSE
     cl_double kernelExecTimeMs=(cl_double)p_total*(cl_double)(1e-09);
-    printf("\nopencl kernel (%s): %lf seconds\n", kernel_name, kernelExecTimeMs);
+    printf("\nopencl kernel (%s): %lf seconds\n", KERNEL_NAME, kernelExecTimeMs);
 #endif
 }
 
@@ -763,7 +763,9 @@ void correlate_gpu(threadData_t *threadData,
         int snp_size,
         int posWset2)
 {
-    int m=tableAsize, n=tableBsize, k=compressed_snp_size,i;
+    int m=tableAsize, n=tableBsize, k=compressed_snp_size; 
+    long long int i;
+    long long int tableCsize = (long long int)m*(long long int)n;
     int pm;     //return value used for assert
     double GFLOPS_BLIS=0.0;
     struct timeval start,end;
@@ -782,8 +784,6 @@ void correlate_gpu(threadData_t *threadData,
     pm=posix_memalign(&(Bc_pack_v), 4096,
             GPU_BLOCK_KC*GPU_BLOCK_NC*sizeof(inputDataType_x32));
     assert(!pm);
-
-    long long int tableCsize=m*n;
 
     pm=posix_memalign(&A, 4096, m*k*sizeof(inputDataType_x32) +
             m*k*sizeof(inputDataType_x32)%4096);

@@ -1,0 +1,93 @@
+#!/bin/bash
+
+## Insert any special commands needed to run here:
+# ex. VCF_EXTRAS="--double-id --allow-extra-chr"
+VCF_EXTRAS="--double-id --allow-extra-chr"
+EXEC_EXTRAS="--r2 --mac 1 --geno 0 --memory 8092"
+
+function get_threads()
+{
+    sed 's/^[^0-9]*\([0-9]\+\).*$/\1/' <<< $(cat /proc/cpuinfo | grep cores | head -n 1)
+}
+
+function vcf2bed()
+{
+    ## VCF to bed
+    [ -d bed_files ] || mkdir -p bed_files
+    bed_name="${input##*/}"
+    bed_name="${bed_name%.*}"
+    bed_dir=bed_files/$bed_name
+    echo
+    plink --vcf $input --out $bed_dir $VCF_EXTRAS 1>/dev/null
+    input=$bed_dir
+}
+
+output="output/out"
+r2lim="0.0"
+threads="$(get_threads)"
+
+function p_help()
+{
+    clear
+    echo "Plink script to run LD tests with vcf input"
+    echo "-------------------------------------------"
+    echo
+    echo "Needed arguements to run:"
+    echo
+    echo "    \"--input\" or \"-i\")      Input file path (ex. -i input_dir/input.vcf)"
+    echo
+    echo "Optional arguements:"
+    echo
+    echo "    \"--help\" or \"-h\")       Print this help manual"
+    echo "    \"--output\" or \"-o\")     Output file path (ex. -o output_dir/output)"
+    echo "                            Default is output/"
+    echo "    \"--threads\" or \"-t\")    Threads to use "
+    echo "                            $(get_threads) at max is advised for your system"
+    echo "                            Default is $(get_threads)"
+    echo "    \"--r2_limit\" or \"-r2l\") Threshold for output (ex. -r2l 0.2)"
+    echo "                            Default is 0.0"
+    echo "    \"--sampleList\" or \"-s\") Insert a sampleList"
+    echo
+    echo "To execute plink with special flags, you can find two strings in \"run\" file:"
+    echo "    (VCF/EXEC)_EXTRAS (lines 6-7)"
+    echo "The comment above (lines 3-4) will help you on the format."
+    exit 0
+}
+
+# args parsing
+while (( $# ))
+do
+    case $1 in
+        "--input"|"-i") shift && input=$1 ;;
+        "--output"|"-o") shift && output=$1 ;;
+        "--threads"|"-t") shift && threads=$1 ;;
+        "--r2_limit"|"-r2l") shift && r2lim=$1 ;;
+        "--sampleList"|"-s") shift && smpl=${1:-""} ;;
+        "--help"|"-h") p_help ;;
+        *) echo "Incorrect argument \"$i\". Run \"./plink_run -h\" for help" && exit 1  ;;
+    esac
+    shift
+done
+
+# Guards
+[ $input ] || { echo "Please insert input directory. Run \"./run -h\" for help" && \
+                exit 1 ; }
+
+[[ $input == *.vcf* ]] && vcf2bed 
+
+[ $smpl ] && awk '{printf "%s %s\n",$1,$1}' < $smpl > sampleListPlink.txt
+
+# run plink
+[ -d ${output%/*} ] || mkdir -p ${output%/*}
+plink --bfile $input \
+      $EXEC_EXTRAS \
+      --ld-window-r2 $r2lim \
+      --ld-window 100000000 \
+      --ld-window-kb 10000000000000 \
+      --out $output \
+      --threads $threads \
+      $([ $smpl ] && echo --keep sampleListPlink.txt) \
+      1>/dev/null
+
+[ -f $output.ld ] || exit 1
+echo "Output saved on \"$output\""

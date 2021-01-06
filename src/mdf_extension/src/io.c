@@ -144,18 +144,18 @@ void getFilter(char *filterFile, char ***wordList, int *wordListSize)
     fclose(fp);
 }
 
-int sample_isValid(char **list, int list_size, char *sample, int *valid_count)
+int sample_isValid(char **list, int list_size, char *sample, int ploidy, int *valid_count)
 {
     if(!list_size)
     {
-        (*valid_count)++;
+        (*valid_count)+=ploidy;
         return 1;
     }
     for(int i=0; i < list_size; i++)
     {
         if((strcmp(list[i],sample)) == 0)
         {
-            (*valid_count)++;
+            (*valid_count)+=ploidy;
             return 1;
         }
     }
@@ -301,6 +301,7 @@ found!! : %s\nNOTICE - Processing first header file\n",entry->d_name);
                             headerData->valid_mask[validList_index++]=sample_isValid(preData->sampleList,
                                                                                       preData->sampleListSize,
                                                                                       word,
+                                                                                      preData->ploidy,
                                                                                       (&headerData->valid_count));
                             VCFsamples++;
                             if(eol == 1)

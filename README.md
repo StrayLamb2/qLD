@@ -1,6 +1,6 @@
-# qLD v0.1.0: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
+# quickLD v0.2.0-develop: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
 
-qLD (quickLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
+quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
 
 ## Related Publications
 
@@ -233,7 +233,7 @@ qLD-parse-2MDF manual
 	-output output_Directory
 	-sampleList input_File
 
-
+Description:
 	-input <STRING>		Specifies the path of the input alignment parsed files
 	-output <STRING>	Specifies the path of the output alignment directory.
 	-sampleList <STRING>	txt file with Format:
@@ -311,7 +311,7 @@ Description
 	                       "input,posWmin1,posWmin2,input2,posWmin2,posWmax2"
 	                       If single input is needed, duplicate the first 3 args.
 	-sorted                (requires input list) Sorts Input List
-
+	-competing             Enables competing task queue as an optimization
 	-r2limit     <FLOAT>   the lowest r2 value to be included in the results (default 0.2)
 	-threads     <INT>     Number of threads to run in parallel.
 	                       Suggested to use physical core number at max.
@@ -344,3 +344,11 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * Consecutive runs with the same output name are not overwritting the old data, neither prompt the user, so use different output names or (re)move the old files    before re-using the name.
 * Not supported data could produce results out of range (>1). In this case we save those values as '123.456' in the report for easy tracking/removal.
 * Invalid input directories can cause unexpected behavior.
+
+## Version History
+
+* 0.1.0:    Initial Release
+* 0.2.0:    Properly placed competing queue as an optimization flag. The new default parallelization method is to assign a region of tasks 
+            in the queue to each thread.
+            Made config script compatible with older bash versions.
+            Minor fixes.

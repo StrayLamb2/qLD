@@ -37,7 +37,7 @@ char *getDir(char *output, char *input);
 
 void getFilter(char *filterFile, char ***wordList, int *wordListSize);
 
-int sample_isValid(char **list, int list_size, char *sample, int *valid_count);
+int sample_isValid(char **list, int list_size, char *sample, int ploidy, int *valid_count);
 
 void readHeaderFile(pre_t *preData, header_t *headerData);
 

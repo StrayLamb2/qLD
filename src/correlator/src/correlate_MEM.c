@@ -256,7 +256,7 @@ helper_t* create_helper_t(int ploidy)
     assert(word);
     newHelper->word=word;
 
-    newHelper->wordLength=STRINGLENGTH;
+    newHelper->wordLength=STRINGLENGTH; 
 
     return newHelper;
 }

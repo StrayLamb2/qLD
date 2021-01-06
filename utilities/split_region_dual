@@ -1,0 +1,77 @@
+#!/bin/bash
+
+export LC_NUMERIC="en_US.UTF-8"
+LANG=en_US
+
+threads=$1
+input=$2
+pos_min=$3
+pos_max=$4
+input2=${5:-$input}
+pos_min2=${6:-$pos_min}
+pos_max2=${7:-$pos_max}
+output=${8:-input_list.txt}
+sets=()
+sets2=()
+factor=1
+
+[[ -d $input ]] && header=$(find ${input} -type f -name "*header*") \
+                || { echo Invalid input. Not a directory. ; exit 1 ; }
+[[ -d $input2 ]] && header=$(find ${input2} -type f -name "*header*") \
+                || { echo Invalid input2. Not a directory. ; exit 1 ; }
+[[ $threads =~ '^[0-9]+$' ]] && { echo Invalid input. Insert number of blocks. ; exit 1 ; }
+
+pieces=$((factor * threads - 1))
+snips=$(( $pos_max - $pos_min ))
+split=$(( snips / (factor * threads) ))
+snips2=$(( $pos_max2 - $pos_min2 ))
+split2=$(( snips2 / (factor * threads) ))
+
+# break input file to #threads sets
+min=$pos_min
+min2=$pos_min2
+
+if [ $min == $min2 ]
+then
+    for i in $(seq 1 $pieces)
+    do
+        max=$(( split + min ))
+        sets+=("$input,$min,$max")
+        min=$(( max + 1 ))
+    done
+    sets+=("$input,$min,$pos_max")
+
+    # write input list to file
+    printf "" > $output
+    for i in $(seq 0 $pieces)
+    do
+        for j in $(seq $i $pieces)
+        do
+            echo ${sets[j]},${sets[i]} >> $output
+        done
+    done
+else
+    for i in $(seq 1 $pieces)
+    do
+        max=$(( split + min ))
+        max2=$(( split2 + min2 ))
+        sets+=("$input,$min,$max")
+        sets2+=("$input2,$min2,$max2")
+        min=$(( max + 1 ))
+        min2=$(( max2 + 1 ))
+    done
+    sets+=("$input,$min,$pos_max")
+    sets2+=("$input2,$min2,$pos_max2")
+
+    # write input list to file
+    printf "" > $output
+    for i in $(seq 0 $pieces)
+    do
+        for j in $(seq 0 $pieces)
+        do
+            echo ${sets[i]},${sets2[j]} >> $output
+        done
+    done
+fi
+
+

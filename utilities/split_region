@@ -1,0 +1,40 @@
+#!/bin/bash
+
+export LC_NUMERIC="en_US.UTF-8"
+LANG=en_US
+
+input=$1
+threads=$2
+pos_min=$3
+pos_max=$4
+output=${5:-input_list.txt}
+sets=()
+factor=1
+
+[[ -d $input ]] && header=$(find ${input} -type f -name "*header*") \
+                || { echo Invalid input. Not a directory. ; exit 1 ; }
+[[ $threads =~ '^[0-9]+$' ]] && { echo Invalid input. Insert thread number. ; exit 1 ; }
+snips=$(( $pos_max - $pos_min ))
+split=$(( snips / (factor * threads) ))
+pieces=$((factor * threads - 1))
+
+# break input file to #threads sets
+min=$pos_min
+for i in $(seq 1 $pieces)
+do
+    max=$(( split + min ))
+    sets+=("$input,$min,$max")
+    min=$(( max + 1 ))
+done
+sets+=("$input,$min,$pos_max")
+
+# write input list to file
+printf "" > $output
+for i in $(seq 0 $pieces)
+do
+    for j in $(seq $i $pieces)
+    do
+        echo ${sets[j]},${sets[i]} >> $output
+    done
+done
+

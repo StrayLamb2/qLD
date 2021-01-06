@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -A mode_array=( [1]="blis" [2]="gpu" [3]="full" [4]="fallback" )
-declare -A modes=( [blis]="" [gpu]="" [full]="" [fallback]="" )
+modes=( blis gpu full fallback )
 
 function print_help()
 {
@@ -55,7 +55,7 @@ function prompt_install()
     printf "${inst_message[*]}" && read -p "Choice: " choice
     while :
     do
-        [[ -v mode_array[$choice] ]] && break
+        [ ${mode_array[$choice]+ok} ] && break
         read -p "Invalid choice. Retry: " choice
     done
     mode=${mode_array[$choice]}
@@ -64,7 +64,7 @@ function prompt_install()
 function installation()
 {
     [ $mode = "empty" ] && prompt_install
-    [[ -v modes[$mode] ]] || \
+    [[ " ${modes[@]} " =~ " $mode " ]] || \
     { printf "Unknown argument \"$mode\"\nTry \"./config help\" for more info\n" && exit 1 ;}
     echo Installing mode: $mode
     mkdir -p bin/gpu_kernel
