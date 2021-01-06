@@ -2,6 +2,14 @@
 
 quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
 
+## Related Publications
+
+Theodoris Charalampos, Alachiotis Nikolaos, Tze Meng Low, Pavlidis Pavlos. "qLD: High-performance Computation of Linkage Disequilibrium on CPU and GPU" 2020 IEEE BioInformatics And BioEngineering (BIBE). IEEE, 2020.
+
+[Alachiotis Nikolaos, Thom Popovici, and Tze Meng Low. "Efficient computation of linkage disequilibria as dense linear algebra operations." 2016 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2016.](https://ieeexplore.ieee.org/abstract/document/7529898)
+
+[Binder Elliott, Tze Meng Low, and Doru Thom Popovici. "A Portable GPU Framework for SNP Comparisons." 2019 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2019.](https://ieeexplore.ieee.org/abstract/document/8778205)
+
 ## Getting Started
 
 qLD is developed and tested in Linux distributions and should only work in Linux environments. The instructions bellow will get you a copy of the project up and running on your local machine for development and testing purposes. See References for further information in the paper behind this software.
@@ -9,8 +17,8 @@ qLD is developed and tested in Linux distributions and should only work in Linux
 ### Clone the repository and get into the main directory
 
 ```
-git clone git@github.com:StrayLamb2/diploma_thesis.git
-cd diploma_thesis
+git clone git@github.com:StrayLamb2/qLD.git
+cd qLD
 ```
 
 ### TL;WR
@@ -322,10 +330,9 @@ Description
 * [BLIS](https://github.com/flame/blis) - The framework behind our CPU kernel
 * [OpenCL](https://www.khronos.org/opencl/) - The framework behind our GPU kernel
 
-## Authors
+## Author
 
 * **[C. Theodoris](https://github.com/StrayLamb2)**
-* **[N. Alachiotis](https://github.com/alachins)**
 
 ## License
 
@@ -336,7 +343,6 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * Loading files in *qLD-compute* is not yet memory optimized and should hog good chunks of memory in big files/large inputLists.
 * Consecutive runs with the same output name are not overwritting the old data, neither prompt the user, so use different output names or (re)move the old files    before re-using the name.
 * Not supported data could produce results out of range (>1). In this case we save those values as '123.456' in the report for easy tracking/removal.
-* Not supported data could produce empty reports (from trimming all the sites) without giving an error message.
 * Invalid input directories can cause unexpected behavior.
 
 ## Version History
