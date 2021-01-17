@@ -196,9 +196,9 @@ void correlate_function_gpu(threadData_t *threadData)
         {
             // Fill nodeData struct for input2
             nodeData2->tableSize=1000;
-            nodeData2->filesList=new_node->filesList;
-            nodeData2->filesListNum=new_node->filesListNum;
-            nodeData2->snipSize=new_node->snipSize;
+            nodeData2->filesList=new_node->filesList2;
+            nodeData2->filesListNum=new_node->filesListNum2;
+            nodeData2->snipSize=new_node->snipSize2;
             nodeData2->headerLine1=new_node->headerLine1;
             nodeData2->headerLine2=new_node->headerLine2;
             nodeData2->posWmin=new_node->posWmin2;

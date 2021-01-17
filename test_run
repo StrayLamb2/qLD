@@ -93,6 +93,7 @@ then
     then
         [ -d $out_dir/gpu ] || mkdir -p $out_dir/gpu
         echo
+
         ./bin/qLD-compute \
             -input $input \
             -output $out_g_file \
@@ -120,11 +121,22 @@ then
     fi
 fi
 
+<<<<<<< HEAD
 echo
 echo "Creating heatmap for blis output:"
 echo "---------------------------------"
 echo
 python utilities/heatmap_viewer.py $out_file $out_dir/blis 
+=======
+if [[ $run = "full" || $run = "heatmap" ]]
+then
+    echo
+    echo "Creating heatmap for blis output:"
+    echo "---------------------------------"
+    echo
+    python utilities/heatmap_viewer.py $out_file $out_dir/blis
+fi
+>>>>>>> 23378db95 (syncing local to remote)
 
 echo
 echo Operation finished

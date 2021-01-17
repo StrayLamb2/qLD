@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#valgrind --leak-check=full \
+#         --show-leak-kinds=all \
+#         --track-origins=yes \
+#         --verbose \
+#         --log-file=valgrind-out.txt \
+#gdb --args \
+#./bin/qLD-compute -inputList input_list.txt \
+#                  -output test_dataset/output/covid_new \
+#                  -ploidy haploid \
+#                  -r2limit 0.2 \
+#                  -mdf \
+#                  -blis \
+#                  -threads 1 \
+#                  -competing -sorted
+
+
+./bin/qLD-compute -input test_dataset/input/test_256_10 \
+                  -output test_dataset/output/covid_test_old \
+                  -ploidy haploid \
+                  -r2limit 0.0 \
+                  -mdf \
+                  -blis \
+                  -threads 1 \
+                  -competing -sorted

@@ -722,10 +722,13 @@ void get_pairwise_ld_score_gpu(unsigned int * tableA_bitcount,
 
                 if((*results)[i*tableAsize+j]>1.0001)
                 {
-                    fprintf(stderr, "qLD-compute: gemm_gpu.c:722: \
-get_pairwise_ld_score: Entry i %d j %d greater than 1.\n\
-%u %u %u, result = %f\n", i, j, tableA_bitcount[j], tableB_bitcount[i],
-                            C[i*tableAsize+j], (*results)[i*tableAsize+j]);
+//                    fprintf(stderr, "qLD-compute: gemm_gpu.c:722: "
+//                                    "get_pairwise_ld_score: "
+//                                    "Entry i %d j %d greater than 1.\n"
+//                                    "%u %u %u, result = %f\n", 
+//                                    i, j, tableA_bitcount[j], tableB_bitcount[i],
+//                                    C[i*tableAsize+j], (*results)[i*tableAsize+j]);
+                    (*results)[i*tableAsize+j]=123.456000000;
                 }
             }
         }

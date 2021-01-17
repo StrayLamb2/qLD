@@ -6,16 +6,25 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
+nColors = 5
+
 parser = argparse.ArgumentParser()
 parser.add_argument('input',metavar='input_dir',
                     help='Directory and basename of the report files')
 parser.add_argument('output',metavar='output_dir',
                     help='Directory to save the heatmaps')
+parser.add_argument('nColors',metavar='numberOfColors',
+                    help='Number of color regions in heatmap',
+                    nargs='?')
 args = parser.parse_args()
+
+if args.nColors:
+    nColors = int(args.nColors)
 
 print('qLD Heatmap creator running with arguments:')
 print('\tinput:\t'+args.input)
-print('\toutput:\t'+args.output+'\n')
+print('\toutput:\t'+args.output)
+print('\tcolors:\t'+str(nColors)+'\n')
 
 ifile = os.path.splitext(args.input)[0]
 
@@ -33,8 +42,7 @@ for report in glob.glob(args.input+'*'):
     df = df.unstack()
     df.columns = df.columns.get_level_values(1)
 
-    n = 5
-    color = plt.cm.get_cmap("tab20b_r", n)
+    color = plt.cm.get_cmap("tab20b_r", nColors)
 
     fig, ax = plt.subplots(figsize=(4, 3), dpi= 300)
     plt.tight_layout()

@@ -117,9 +117,25 @@ void bin_gemm_2x2(
 	*((c + rs_c + cs_c))  += (*alpha) * t11;
 	*/
 
-	*((uint64_t*)c)  +=  t00;
-	*((uint64_t*)(c + rs_c))  += t10;
-	*((uint64_t*)(c + cs_c))  += t01;
-	*((uint64_t*)(c + rs_c + cs_c))  += t11;
+    //printf("Before\tc:%lu \tt00:%lu\tt10:%lu\tt01:%lu\tt11:%lu\n",
+    //      *((uint64_t*)c),t00,t10,t01,t11);
 
+    // C = (a *) AB (+ bC)
+
+    if((*beta) == 0.0)
+    {
+	    *((uint64_t*)c)  =  t00;
+	    *((uint64_t*)(c + rs_c))  = t10;
+	    *((uint64_t*)(c + cs_c))  = t01;
+	    *((uint64_t*)(c + rs_c + cs_c))  = t11;
+    }
+    else
+    {
+	    *((uint64_t*)c)  +=  t00;
+	    *((uint64_t*)(c + rs_c))  += t10;
+	    *((uint64_t*)(c + cs_c))  += t01;
+	    *((uint64_t*)(c + rs_c + cs_c))  += t11; 
+    }
+    //printf("After\tc:%lu\tt00:%lu\tt10:%lu\tt01:%lu\tt11:%lu\n",
+    //      *((uint64_t*)c),t00,t10,t01,t11);
 }

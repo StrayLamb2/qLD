@@ -3,7 +3,6 @@
 
 CC = gcc
 # Adder no-maybe-uninitialized, as it doesn't help debugging
-# MPAMPIS
 CFLAGS = -std=gnu99 -march=native -O3 -Wall -Wno-maybe-uninitialized -D_SHARED #-D_UNROLL
 
 LIBRARIES = -lm -lz
