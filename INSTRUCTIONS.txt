@@ -1,0 +1,21 @@
+Installation:
+
+./install_blis
+./config install full
+
+Full test:
+
+./test_run
+
+Test computation (only):
+(must have ran a full test once before)
+
+./test_run compute
+
+Test computation (only using blis):
+
+./test_run compute blis
+
+Test computation (only using gpu):
+
+./test_run compute gpu

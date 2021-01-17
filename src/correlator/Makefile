@@ -2,7 +2,7 @@
 
 CC = gcc
 
-CMUFLAGS = -mfpmath=sse -fPIC #-DVERBOSE
+CMUFLAGS = -mfpmath=sse -fPIC -DVERBOSE
 
 WFLAGS= -Wmissing-prototypes -Wall -Wextra #-Wstrict-prototypes
 
@@ -28,10 +28,18 @@ SRC = $(filter-out $(SOURCE)/*_gpu.c, $(wildcard $(SOURCE)/*.c))
 
 OBJ = $(patsubst $(SOURCE)/%.c, build/%.o, $(SRC)) $(BLIS_LIB)
 
+cblas_cpu_syrk: LDFLAGS += -DSYRK
+cblas_cpu_syrk: CFLAGS += -DSYRK
+cblas_cpu_syrk: cblas_cpu
+
 cblas_cpu: INC_DIRS += $(BLIS_INC)
 cblas_cpu: LDFLAGS += -DCBLAS_USE -msse4.2 -fopenmp
 cblas_cpu: CFLAGS += -DCBLAS_USE
 cblas_cpu: cpu
+
+cblas_gpu_syrk: LDFLAGS += -DSYRK
+cblas_gpu_syrk: CFLAGS += -DSYRK
+cblas_gpu_syrk: cblas_gpu
 
 cblas_gpu: INC_DIRS += $(BLIS_INC)
 cblas_gpu: LDFLAGS += -DCBLAS_USE -msse4.2 -fopenmp
@@ -80,8 +88,9 @@ ${EXECNAME}: $(OBJ)
 build/%.o: $(SOURCE)/%.c $()
 	$(CC) $(DBGFLAGS) -o $@ -c $<  $(CFLAGS) $(INC_DIRS:%=-I%) $(LIBRARIES)
 
-.PHONY: cblas_cpu cblas_gpu debug_cblas_cpu debug_cblas_gpu \
-		cstates cpu gpu debug_cstates debug_cpu debug_gpu clean mrproper
+.PHONY: cblas_cpu_syrk cblas_gpu_syrk cblas_cpu cblas_gpu debug_cblas_cpu \
+		debug_cblas_gpu cstates cpu gpu debug_cstates debug_cpu debug_gpu \
+		clean mrproper
 
 clean:
 	@rm -rf build/*

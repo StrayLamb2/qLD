@@ -72,7 +72,7 @@ function installation()
     case $mode in
         "blis")
             make clean
-            make cblas_cpu
+            make cblas_cpu_syrk
             ;;
         "gpu")
             make clean
@@ -80,7 +80,7 @@ function installation()
             ;;
         "full")
             make clean
-            make cblas_gpu
+            make cblas_gpu_syrk
             ;;
         "fallback")
             make clean

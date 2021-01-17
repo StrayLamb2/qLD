@@ -128,10 +128,11 @@ void blis_gemm(unsigned int M,
                inputDataType_x64 alphap,
                inputDataType_x64 *a,
                inputDataType_x64 *b,
-               inputDataType_x64 *c)
+               inputDataType_x64 *c,
+               int posWset)
 {
-    inputDataType_x64 *Ac, *Bc;
-	inputDataType_x64 *Cc;
+    //inputDataType_x64 *Ac, *Bc;
+	//inputDataType_x64 *Cc;
 	//inputDataType_x64 *Ar, *Br;
 	//inputDataType_x64 *Cr;
 
@@ -140,82 +141,139 @@ void blis_gemm(unsigned int M,
     //{
     //    for(unsigned int tk=0; tk < K; tk++)
     //    {
-    //        printf("%lu ",a[i+M*tk]);
+    //        printf("%20lu ",a[tk+K*i]);
     //    }
     //    printf("\n");
     //}
+    //printf("\n");
     //printf("table B:\n");
     //for(unsigned int i=0; i < N; i++)
     //{
     //    for(unsigned int tk=0; tk < K; tk++)
     //    {
-    //        printf("%lu ",b[tk+K*i]);
+    //        printf("%20lu ",b[tk+K*i]);
     //    }
     //    printf("\n");
     //}
+    //printf("\n");
 
-    for(unsigned int jc=0; jc<N; jc+=BLOCK_NC)
-	{
-		unsigned int n_alg=fmin(BLOCK_NC,N-jc);
-		for(unsigned int pc=0; pc<K; pc+=BLOCK_KC)
-		{
-			unsigned int k_alg=fmin(BLOCK_KC,K-pc);
+    //printf("table C before:\n");
+    //for(unsigned int i=0; i < M; i++)
+    //{
+    //    for(unsigned int tk=0; tk < N; tk++)
+    //    {
+    //        printf("%4lu ",c[tk+N*i]);
+    //    }
+    //    printf("\n");
+    //}
+    //printf("\n");
 
-			Bc=&b[pc+jc*K];
-			for(unsigned int ic=0; ic<M; ic+=BLOCK_MC)
-			{
-				unsigned int m_alg=fmin(BLOCK_MC,M-ic);
-				Ac=&a[ic+pc*M];
-				Cc=&c[ic+jc*M];
-                if((m_alg != 1)) //&& (n_alg != 1) && (k_alg != 1))
-                {
-                    cblas_dgemm(CblasColMajor,
-                                CblasNoTrans,
-                                CblasNoTrans,
-                                m_alg,
-                                n_alg,
-                                k_alg,
-                                (double)alphap,
-                                (double*)Ac,
-                                M,
-                                (double*)Bc,
-                                K,
-                                0.0,
-                                (double*)Cc,
-                                M);
-                }
-                //else if((m_alg == 1) && (n_alg != 1))
-                //{
-                    //cblas_dgemv(CblasColMajor,
-                    //            CblasNoTrans,
-                    //            m_alg,
-                    //            k_alg,
-                    //            (double)alphap,
-                    //            (double*)Ac,
-                    //            M,
-                    //            (double*)Bc,
-                    //            K,
-                    //            0.0,
-                    //            (double*)Cc,
-                    //            M);
+    //for(unsigned int i=0; i < M; i++)
+    //{
+    //    for(unsigned int tk=0; tk < K; tk++)
+    //    {
+    //        if(a[tk+K*i] != b[tk+K*i])
+    //        {
+    //            printf("Mismatch in [%d,%d]\n", i, tk);
+    //        }
+ 
+    //        if(a[tk+K*i] != (double)a[tk+K*i])
+    //        {
+    //            printf("Uint != Double in A[%d,%d]\n", i, tk);
+    //        }
+    //        if(b[tk+K*i] != (double)b[tk+K*i])
+    //        {
+    //            printf("Uint != Double in B[%d,%d]\n", i, tk);
+    //        }
+    //    }
+    //}
 
-                    //fprintf(stderr, "This is the PITA case... Aborting from life\n");
-                    //exit(1);
-                //}
-                else if(m_alg == 1)
-                {
-                    dgemm_ref(k_alg,m_alg,n_alg,alphap,Ac,Bc,Cc,1,M);
-                    //fprintf(stderr,"Ref case\n");
-                }
-                else
-                {
-                    fprintf(stderr,"Trully unfortunate case. Please submit a ticket to the "
-                           "repo at https://www.github.com/StrayLamb2/qLD "
-                           "stating this message\n");
-                }
-   			}
-   		}
-   	}
+    //FILE* diag;
+    //FILE* second_diag;
+    //FILE* other_elements;
+
+#ifdef SYRK
+    if(posWset)
+    {
+#endif
+        //diag=fopen("diagonal_blis.txt","w");
+        //second_diag=fopen("second_diagonal_blis.txt","w");
+        //other_elements=fopen("other_elements_blis.txt","w");
+        
+        cblas_dgemm(CblasColMajor,
+                    CblasTrans,
+                    CblasNoTrans,
+                    M,
+                    N,
+                    K,
+                    (double)alphap,
+                    (double*)a,
+                    K,
+                    (double*)b,
+                    K,
+                    0.0,
+                    (double*)c,
+                    M);
+#ifdef SYRK
+    }
+    else
+    {
+        //diag=fopen("diagonal_syrk.txt","w");
+        //second_diag=fopen("second_diagonal_syrk.txt","w");
+        //other_elements=fopen("other_elements_syrk.txt","w");
+
+        printf("SYRK Enabled\n");
+        cblas_dsyrk(CblasColMajor,
+                    CblasLower,
+                    CblasTrans,
+                    M,
+                    K,
+                    (double)alphap,
+                    (double*)a,
+                    K,
+                    0.0,
+                    (double*)c,
+                    M);
+    }
+#endif
+    
+    //printf("table C as double:\n");
+    //for(unsigned int i=0; i < M; i++)
+    //{
+    //    for(unsigned int tk=0; tk < N; tk++)
+    //    {
+    //        printf("%6.2f ",(double)c[tk+N*i]);
+    //    }
+    //    printf("\n");
+    //}
+    //printf("\n");
+
+    //printf("table C as long unsigned:\n");
+    //for(unsigned int i=0; i < M; i++)
+    //{
+    //    for(unsigned int tk=0; tk < N; tk++)
+    //    {
+    //        printf("%4lu ",(long unsigned int)c[tk+N*i]);
+
+    //        if(tk == i)
+    //        {
+    //            fprintf(diag, "%lu\n", c[tk+N*i]);
+    //        }
+    //        else if(tk == i+1)
+    //        {
+    //            fprintf(second_diag, "%lu\n",c[tk+N*i]);
+    //        }
+    //        else if(tk > i+1)
+    //            fprintf(other_elements, "%lu\n",c[tk+N*i]);
+
+    //    }
+    //    printf("\n");
+    //}
+    //printf("\n");
+
+    //fclose(diag);
+    //fclose(second_diag);
+    //fclose(other_elements);
 }
 #endif
 
@@ -304,18 +362,45 @@ void get_pairwise_ld_score(unsigned int * tableA_bitcount,
 			    val_3=((ResultDataType)C[i*tableAsize+j])/snp_size;
 			    (*results)[i*tableAsize+j] = ((val_3-val_1*val_2)*(val_3-val_1*val_2));
 			    (*results)[i*tableAsize+j] /= (val_1*val_2*(1.0-val_1)*(1.0-val_2));
+                
+                //printf("\tA[%d]\tB[%d]\tC[%u]\n",
+                //        j,i,i*tableAsize+j);
+                //printf("%8u%8u%8lu\n\n",
+                //        tableA_bitcount[j],
+                //        tableB_bitcount[i],
+                //        C[i*tableAsize+j]);
+                
+                //printf("A[%d]: %8u\t%f\n",j,tableA_bitcount[j],val_1);
+                //printf("B[%d]: %8u\t%f\n",i,tableB_bitcount[i],val_2);
+                //printf("C[%d]: %8lu\t%f\n\n",i*tableAsize+j,C[i*tableAsize+j],val_3);
+
 
                 if((*results)[i*tableAsize+j]>1.0001)
 		        {
-//			        fprintf(stderr, "qLD-compute: gemm_cpu.c:247: \
-//get_pairwise_ld_score: Entry i %d j %d greater than 1.\n\
-//%u %u %lu, result = %f\n", i, j, tableA_bitcount[j], tableB_bitcount[i],
-//                            C[i*tableAsize+j], (*results)[i*tableAsize+j]);
+//			        fprintf(stderr, "qLD-compute: gemm_cpu.c:247: "
+//			                        "get_pairwise_ld_score: "
+//			                        "Entry i %d j %d greater than 1.\n"
+//                                  "%u %u %lu, result = %f\n", 
+//                                  i, j, tableA_bitcount[j], tableB_bitcount[i],
+//                                  C[i*tableAsize+j], (*results)[i*tableAsize+j]);
+                    
+                    //printf("Danger! High Voltage in %d:%d! %f %f %f\n",i,j,val_3, val_1, val_2);
                     (*results)[i*tableAsize+j]=123.456000000;
 		        }
 	        }
 		}
 	}
+
+    //printf("Results:\n");
+    //for(int i=0; i < tableAsize; i++)
+    //{
+    //    for(int tk=0; tk < tableBsize; tk++)
+    //    {
+    //        printf("%6.2f ",(*results)[tk+tableBsize*i]);
+    //    }
+    //    printf("\n");
+    //}
+    //printf("\n");
 }
 
 void mlt(unsigned int m,
@@ -436,9 +521,10 @@ void correlate(threadData_t *threadData,
                   n,
                   k,
                   alphap,
-                  A,
+                  tableA,
                   tableB,
-                  C);
+                  C,
+                  posWset2);
 #else
         fprintf(stderr,"ERROR: Invalid state, cannot use blis without defining it\n");
         exit(1);

@@ -65,7 +65,8 @@ void blis_gemm(unsigned int M,
                inputDataType_x64 alphap,
                inputDataType_x64 *a,
                inputDataType_x64 *b,
-               inputDataType_x64 *c);
+               inputDataType_x64 *c,
+               int posWset);
 
 void gemm(unsigned int m,
           unsigned int n,

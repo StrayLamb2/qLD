@@ -1,14 +1,6 @@
-# quickLD v0.2.0: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
+# quickLD v0.2.1: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
 
 quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
-
-## Related Publications
-
-Theodoris Charalampos, Alachiotis Nikolaos, Tze Meng Low, Pavlidis Pavlos. "qLD: High-performance Computation of Linkage Disequilibrium on CPU and GPU" 2020 IEEE BioInformatics And BioEngineering (BIBE). IEEE, 2020.
-
-[Alachiotis Nikolaos, Thom Popovici, and Tze Meng Low. "Efficient computation of linkage disequilibria as dense linear algebra operations." 2016 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2016.](https://ieeexplore.ieee.org/abstract/document/7529898)
-
-[Binder Elliott, Tze Meng Low, and Doru Thom Popovici. "A Portable GPU Framework for SNP Comparisons." 2019 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). IEEE, 2019.](https://ieeexplore.ieee.org/abstract/document/8778205)
 
 ## Getting Started
 
@@ -17,8 +9,8 @@ qLD is developed and tested in Linux distributions and should only work in Linux
 ### Clone the repository and get into the main directory
 
 ```
-git clone git@github.com:StrayLamb2/qLD.git
-cd qLD
+git clone git@github.com:StrayLamb2/diploma_thesis.git
+cd diploma_thesis
 ```
 
 ### TL;WR
@@ -30,11 +22,24 @@ It is suggested that you (at least) briefly view the rest of the Readme. If you 
 ./test_run full blis
 ```
 
+If you want to use a simple heatmap viewer for the results of qLD, we provide a Python implementation.
+To install the required packages for the viewer, a requirements file is included in the main directory.
+The simplest way to use it is the command:
+
+```
+pip3 install -r heatmap_viewer_reqs.txt
+```
+
+which installs the requirements to your global python packages.
+
 ### Prerequisites
 
 * [make](https://www.gnu.org/software/make/)
 * [BLIS](https://github.com/flame/blis)
 * [OpenCL](https://github.com/OpenCL)
+
+If you want to use the heatmap viewer:
+* [Python3](https://www.python.org/download/releases/3.0/)
 
 Most Systems probably already include make, if yours does not, install the ```make``` package using the package manager of your distro.
 
@@ -58,7 +63,6 @@ You will also need to install OpenCL headers for linking. In most repositories t
 * [Arch](https://www.archlinux.org/packages/extra/any/opencl-headers)
 * [Fedora](https://fedora.pkgs.org/30/fedora-armhfp/opencl-headers-2.2-4.20190205git49f07d3.fc30.noarch.rpm.html)
 * [Centos 7](https://centos.pkgs.org/7/epel-x86_64/opencl-headers-2.2-1.20180306gite986688.el7.noarch.rpm.html)
-
 
 ### Installing qLD
 
@@ -330,7 +334,7 @@ Description
 * [BLIS](https://github.com/flame/blis) - The framework behind our CPU kernel
 * [OpenCL](https://www.khronos.org/opencl/) - The framework behind our GPU kernel
 
-## Author
+## Authors
 
 * **[C. Theodoris](https://github.com/StrayLamb2)**
 
@@ -343,6 +347,7 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * Loading files in *qLD-compute* is not yet memory optimized and should hog good chunks of memory in big files/large inputLists.
 * Consecutive runs with the same output name are not overwritting the old data, neither prompt the user, so use different output names or (re)move the old files    before re-using the name.
 * Not supported data could produce results out of range (>1). In this case we save those values as '123.456' in the report for easy tracking/removal.
+* Not supported data could produce empty reports (from trimming all the sites) without giving an error message.
 * Invalid input directories can cause unexpected behavior.
 
 ## Version History
@@ -352,3 +357,5 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
             in the queue to each thread.
             Made config script compatible with older bash versions.
             Minor fixes.
+* 0.2.1:    Using syrk method for single region calculations. 
+            Several fixes.
