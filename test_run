@@ -127,7 +127,7 @@ then
     echo "Creating heatmap for blis output:"
     echo "---------------------------------"
     echo
-    python utilities/heatmap_viewer.py $out_file $out_dir/blis
+    python3 utilities/heatmap_viewer.py $out_file $out_dir/blis
 fi
 
 echo

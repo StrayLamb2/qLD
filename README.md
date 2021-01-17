@@ -22,11 +22,24 @@ It is suggested that you (at least) briefly view the rest of the Readme. If you 
 ./test_run full blis
 ```
 
+If you want to use a simple heatmap viewer for the results of qLD, we provide a Python implementation.
+To install the required packages for the viewer, a requirements file is included in the main directory.
+The simplest way to use it is the command:
+
+```
+pip3 install -r heatmap_viewer_reqs.txt
+```
+
+which installs the requirements to your global python packages.
+
 ### Prerequisites
 
 * [make](https://www.gnu.org/software/make/)
 * [BLIS](https://github.com/flame/blis)
 * [OpenCL](https://github.com/OpenCL)
+
+If you want to use the heatmap viewer:
+* [Python3](https://www.python.org/download/releases/3.0/)
 
 Most Systems probably already include make, if yours does not, install the ```make``` package using the package manager of your distro.
 
@@ -50,7 +63,6 @@ You will also need to install OpenCL headers for linking. In most repositories t
 * [Arch](https://www.archlinux.org/packages/extra/any/opencl-headers)
 * [Fedora](https://fedora.pkgs.org/30/fedora-armhfp/opencl-headers-2.2-4.20190205git49f07d3.fc30.noarch.rpm.html)
 * [Centos 7](https://centos.pkgs.org/7/epel-x86_64/opencl-headers-2.2-1.20180306gite986688.el7.noarch.rpm.html)
-
 
 ### Installing qLD
 
