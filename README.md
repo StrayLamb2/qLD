@@ -5,7 +5,7 @@ quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random asso
 
 ## Getting Started
 
-qLD is developed and tested in Linux distributions and should only work in Linux environments. The instructions bellow will get you a copy of the project up and running on your local machine for development and testing purposes. See References for further information in the paper behind this software.
+quickLD is developed and tested in Linux distributions and should only work in Linux environments. The instructions bellow will get you a copy of the project up and running on your local machine for development and testing purposes. See References for further information in the paper behind this software.
 
 ### Clone the repository and get into the main directory
 
@@ -15,7 +15,7 @@ cd diploma_thesis
 ```
 
 ### TL;WR
-It is suggested that you (at least) briefly view the rest of the Readme. If you just want to test the program before investing more time into it, you can use the following commands to install and test-run qLD in blis kernel mode:
+It is suggested that you (at least) briefly view the rest of the Readme. If you just want to test the program before investing more time into it, you can use the following commands to install and test-run quickLD in blis kernel mode:
 
 ```
 ./install_blis
@@ -23,7 +23,7 @@ It is suggested that you (at least) briefly view the rest of the Readme. If you 
 ./test_run full blis
 ```
 
-If you want to use a simple heatmap viewer for the results of qLD, we provide a Python implementation.
+If you want to use a simple heatmap viewer for the results of quickLD, we provide a Python implementation.
 To install the required packages for the viewer, a requirements file is included in the main directory.
 The simplest way to use it is the command:
 
@@ -65,9 +65,9 @@ You will also need to install OpenCL headers for linking. In most repositories t
 * [Fedora](https://fedora.pkgs.org/30/fedora-armhfp/opencl-headers-2.2-4.20190205git49f07d3.fc30.noarch.rpm.html)
 * [Centos 7](https://centos.pkgs.org/7/epel-x86_64/opencl-headers-2.2-1.20180306gite986688.el7.noarch.rpm.html)
 
-### Installing qLD
+### Installing quickLD
 
-To install qLD, you only need to run the included configuration script and follow the prompt:
+To install quickLD, you only need to run the included configuration script and follow the prompt:
 
 ```
 ./config
@@ -339,6 +339,13 @@ Description
 	                       (needs mdf parsing your input before using this feature)
 	                       Recommended, perfomance greatly enhanced
 ```
+
+## Missing-data handling
+
+quickLD provides two strategies to handle missing data. By default,
+sites with missing data are discarded. Alternatively, the -impute
+command-line flag can be used to deploy a probabilistic missing-data
+imputation method on a per-site basis.
 
 ## Built With
 
