@@ -257,7 +257,7 @@ Description:
 	                       haploid:           single digit snip: ex. '0'
 	                       phased_diploid:    double digit snip: ex. "0|0"
 	                       unphased_diploid:  double digit snip:	ex. "0/0"
-	-seed <INT>	Sets the random seed for unphased diploid data.	
+	-seed <INT>	       Sets the random seed.	
 ```
 ```
 ./bin/qLD-compute -help
@@ -330,8 +330,8 @@ Description
 	-threads     <INT>     Number of threads to run in parallel.
 	                       Suggested to use physical core number at max.
 	                       On your system this would be 4.
-	-seed        <INT>     Sets the random seed for unphased diploid data.	
-    -blis                  Use the blis framework for calculations
+	-seed        <INT>     Sets the random seed.	
+        -blis                  Use the blis framework for calculations
 	                       (Your System is eligible for blis)
 	-gpu                   use the gpu for calculations
 	                       (there has to be a gpu in the system)
