@@ -27,6 +27,7 @@ printf("---------------------\n");
     printf("\t-sampleList input_File\n");
     printf("\t-ploidy correct_ploidy\n");
     printf("\t-seed seed_number\n");
+    printf("\t-impute\n");
     printf("\nDescription:\n");
     printf("\t-input <STRING>\t\tSpecifies the path of the input alignment parsed files\n");
     printf("\t-output <STRING>\tSpecifies the path of the output alignment directory.\n");
@@ -43,7 +44,8 @@ printf("---------------------\n");
            "\t                       haploid:           single digit snip: ex. '0'\n"
            "\t                       phased_diploid:    double digit snip: ex. \"0|0\"\n"
            "\t                       unphased_diploid:  double digit snip:\tex. \"0/0\"\n");
-    printf("\t-seed <INT>\tSets the random seed for unphased diploid data.");
+    printf("\t-seed <INT>\t\tSets the random seed.\n");
+    printf("\t-impute\t\t\tEnables the imputation of missing data.\n");
     printf("\t");
     printf("\n\n");
 

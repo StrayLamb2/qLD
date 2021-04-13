@@ -125,7 +125,7 @@ void printHelp(void)
            "\t-threads     <INT>     Number of threads to run in parallel.\n"
            "\t                       Suggested to use physical core number at max.\n"
            "\t                       On your system this would be %ld.\n"
-           "\t-seed        <INT>     Sets the random seed for unphased diploid data.\n", get_corecount());
+           "\t-seed        <INT>     Sets the random seed.\n", get_corecount());
         printf(
            "\t-blis                  Use the blis framework for calculations\n");
     if(get_blis())
