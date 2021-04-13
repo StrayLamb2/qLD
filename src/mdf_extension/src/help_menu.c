@@ -25,6 +25,8 @@ printf("---------------------\n");
     printf("\t-input input_Directory\n");
     printf("\t-output output_Directory\n");
     printf("\t-sampleList input_File\n");
+    printf("\t-ploidy correct_ploidy\n");
+    printf("\t-seed seed_number\n");
     printf("\nDescription:\n");
     printf("\t-input <STRING>\t\tSpecifies the path of the input alignment parsed files\n");
     printf("\t-output <STRING>\tSpecifies the path of the output alignment directory.\n");
@@ -37,6 +39,12 @@ printf("---------------------\n");
             "\t\t\t\tSpecifies the name of the file that includes\n"
             "\t\t\t\ta list of valid samples from the input\n"
             "\t\t\t\tthat will be selected for processing\n\n");
+    printf("\t-ploidy <STRING>  Supported ploidy types:\n"
+           "\t                       haploid:           single digit snip: ex. '0'\n"
+           "\t                       phased_diploid:    double digit snip: ex. \"0|0\"\n"
+           "\t                       unphased_diploid:  double digit snip:\tex. \"0/0\"\n");
+    printf("\t-seed <INT>\tSets the random seed for unphased diploid data.");
+    printf("\t");
     printf("\n\n");
 
 }

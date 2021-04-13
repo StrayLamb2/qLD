@@ -59,6 +59,14 @@ int arg_parser(int argc, char **argv,  pre_t *preData)
             }
             continue;
         }
+        else if(!strcmp(argv[i], "-seed"))
+        {
+            srand(atoi(argv[i+1]));
+        }
+        else if(!strcmp(argv[i], "-impute"))
+        {
+            preData->impute=1;
+        }
         else if(!strcmp(argv[i], "-sampleList"))
         {
             if(++i < argc)

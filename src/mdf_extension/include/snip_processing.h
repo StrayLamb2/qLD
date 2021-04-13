@@ -43,7 +43,10 @@ int getGTfield(char * string, int GTpos);
 
 void dataShuffleKnuth(char * data, int startIndex, int endIndex);
 
-void getGTdata(char * string, char * stateVector, int statesTotal, char * sampleData);
+void getGTdata(char * string, 
+               char * stateVector, 
+               int statesTotal, 
+               char * sampleData);
 
 void processSampleVCF(helper_t *helperData,
                       int GTpos,
@@ -54,7 +57,7 @@ int mapCharToInt(char a);
 
 int getDataType(int * states);
 
-int determineStates(int snipSize, char * line, int states[STATESALL]);
+int determineStates(int snipSize, char * line, int *states);
 
 int removeNonPolymorphicSiteBIN(char* line, int snipSize, int filterOut);
 
