@@ -239,6 +239,7 @@ qLD-parse-2MDF manual
 	-sampleList input_File
 	-ploidy correct_ploidy
 	-seed seed_number
+	-impute
 
 Description:
 	-input <STRING>		Specifies the path of the input alignment parsed files
@@ -257,7 +258,8 @@ Description:
 	                       haploid:           single digit snip: ex. '0'
 	                       phased_diploid:    double digit snip: ex. "0|0"
 	                       unphased_diploid:  double digit snip:	ex. "0/0"
-	-seed <INT>	       Sets the random seed.	
+	-seed <INT>		Sets the random seed.
+	-impute			Enables the imputation of missing data.
 ```
 ```
 ./bin/qLD-compute -help
