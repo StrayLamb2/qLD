@@ -1,4 +1,5 @@
 /*
+ *
 qLD - High performance computation of Linkage disequilibrium
 Copyright (C) 2020  C. Theodoris, N. Alachiotis
 
@@ -37,6 +38,7 @@ pre_t *init_preprocess_struct(void)
     strcpy(preData->sampleList[0],"");
     preData->ploidy=2;
     preData->sampleListSize=0;
+    preData->impute=0;
 
     return preData;
 }

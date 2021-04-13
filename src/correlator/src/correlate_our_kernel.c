@@ -75,6 +75,7 @@ void printHelp(void)
            "\t-inputList    input_File\n"
            "\t-r2limit      value\n"
            "\t-threads      value\n"
+           "\t-seed         value\n"
            "\t-sorted\n"
            "\t-blis\n"
 #ifdef GPU
@@ -123,7 +124,8 @@ void printHelp(void)
            "\t-r2limit     <FLOAT>   the lowest r2 value to be included in the results (default 0.2)\n"
            "\t-threads     <INT>     Number of threads to run in parallel.\n"
            "\t                       Suggested to use physical core number at max.\n"
-           "\t                       On your system this would be %ld.\n", get_corecount());
+           "\t                       On your system this would be %ld.\n"
+           "\t-seed        <INT>     Sets the random seed for unphased diploid data.\n", get_corecount());
         printf(
            "\t-blis                  Use the blis framework for calculations\n");
     if(get_blis())
@@ -381,7 +383,14 @@ void commandLineParser(int argc,
             fflush(stdout);
             *table = 1;
             continue;
-        } 
+        }
+        if(!strcmp(argv[i], "-seed"))
+        {
+            printf("\t%s %d\n",argv[i],atoi(argv[i+1]));
+            fflush(stdout);
+            srand(atoi(argv[i+1]));
+        }
+
 #ifdef CBLAS_USE
         if(!strcmp(argv[i], "-blis"))
         {

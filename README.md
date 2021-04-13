@@ -236,6 +236,8 @@ qLD-parse-2MDF manual
 	-input input_Directory
 	-output output_Directory
 	-sampleList input_File
+	-ploidy correct_ploidy
+	-seed seed_number
 
 Description:
 	-input <STRING>		Specifies the path of the input alignment parsed files
@@ -250,6 +252,11 @@ Description:
 				a list of valid samples from the input
 				that will be selected for processing
 
+	-ploidy <STRING>  Supported ploidy types:
+	                       haploid:           single digit snip: ex. '0'
+	                       phased_diploid:    double digit snip: ex. "0|0"
+	                       unphased_diploid:  double digit snip:	ex. "0/0"
+	-seed <INT>	Sets the random seed for unphased diploid data.	
 ```
 ```
 ./bin/qLD-compute -help
@@ -269,6 +276,7 @@ qLD-compute manual
 	-inputList    input_File
 	-r2limit      value
 	-threads      value
+	-seed         value
 	-sorted
 	-blis
 	-gpu
@@ -315,12 +323,14 @@ Description
 	                       "input,posWmin1,posWmin2,input2,posWmin2,posWmax2"
 	                       If single input is needed, duplicate the first 3 args.
 	-sorted                (requires input list) Sorts Input List
+
 	-competing             Enables competing task queue as an optimization
 	-r2limit     <FLOAT>   the lowest r2 value to be included in the results (default 0.2)
 	-threads     <INT>     Number of threads to run in parallel.
 	                       Suggested to use physical core number at max.
 	                       On your system this would be 4.
-	-blis                  Use the blis framework for calculations
+	-seed        <INT>     Sets the random seed for unphased diploid data.	
+    -blis                  Use the blis framework for calculations
 	                       (Your System is eligible for blis)
 	-gpu                   use the gpu for calculations
 	                       (there has to be a gpu in the system)

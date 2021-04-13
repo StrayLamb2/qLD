@@ -330,7 +330,7 @@ void findFiles(char *inputPathName,
                 // Ensure it is the allignment and format we need
                 if(strstr(entry->d_name, allignmentId) != NULL &&
                    strstr(entry->d_name, "header") == NULL &&
-                   mdf?strstr(entry->d_name, ".mdf"):strstr(entry->d_name, ".vcf.gz"))
+                   (mdf?strstr(entry->d_name, ".mdf"):strstr(entry->d_name, ".vcf.gz")))
                 {
                     sscanf(entry->d_name,"%[^_]_%d_%d_%d_%d.",tmpId, &tmpMin, &tmpMax,
                             &tmpPosMin, &tmpPosMax);
@@ -351,6 +351,7 @@ void findFiles(char *inputPathName,
                            (((tmpMax - tmpMin + 1)==snipsPerFile) ||
                             tmpMax == totalSnips))
                         {
+
                             // Add it to the files list
                             filesListNum[0]++;
                             filesList[0]=(char**)realloc_buff((void *)filesList[0],

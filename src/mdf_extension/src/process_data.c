@@ -40,7 +40,7 @@ int writeToTable_x64(pre_t *preData,
     int position=-1, statesREF=0, statesALT=0, VTisSNP=0, GTpos=-1;
     int sampleIndex=-1;
     float AF=0.5;
-    
+
     int statesNum=0, states[STATESALL];
     for(int i=0; i < STATESALL; ++i)
         states[i]=0;
@@ -162,6 +162,7 @@ int writeToTable_x64(pre_t *preData,
     {
         sampleIndex=0;
         helperData->snipChar[0]='\0';
+        // zero-out for new word
         while(getWordFromString(helperData->line,
                                 &(helperData->word),
                                 &eol,
@@ -180,6 +181,7 @@ int writeToTable_x64(pre_t *preData,
             }
             sampleIndex++;
 
+            
             if(eol == 1)
                 break;
         }
@@ -194,12 +196,84 @@ int writeToTable_x64(pre_t *preData,
                             position, headerData->snipSize);
             assert(strlen(helperData->snipChar) != (size_t)headerData->snipSize);
         }
-        statesNum=determineStates(headerData->snipSize, helperData->snipChar, states);
+        statesNum=determineStates(headerData->snipSize, helperData->snipChar, &(states[0]));
+        
+        //-----------------------------------------------------------
+        if(statesNum == 3 && preData->impute)
+        {
+            //printf("Line is: %s\n",helperData->snipChar);
+            //printf("zeros:%d ones:%d\n",states[0],states[1]); 
+            double tHold=((double)states[0]) / 
+                         ((double)(states[0] + states[1])); 
+            //printf("Threshold: %f\n",tHold);
+            //printf("Primary: %c Secondary: %c\n",stateVector[0], stateVector[1]);
+                
+            for(int smp=0; smp < headerData->snipSize; smp++)
+            {
+                if(helperData->snipChar[smp] == '.')
+                {
+                    double rVal=((double)rand()) / ((double)RAND_MAX);
+                    //printf("Rand Value: %f\n",rVal);
+                    helperData->snipChar[smp]=((rVal<=tHold)?stateVector[0]:stateVector[1]);
+                }
+            }
+
+            //printf("Line is now: %s\n",helperData->snipChar);
+        }
+
+        if(statesNum == 5 && preData->impute)
+        {
+            //printf("Line is: %s\n",helperData->snipChar);
+            //printf("A: %d, C: %d, G: %d, T: %d\n", states[3],
+            //                                       states[4],
+            //                                       states[5],
+            //                                       states[6]); 
+            double cumm=(double)(states[3] + states[4] + states[5] + states[6]);
+            double tAC=(double)states[3] / cumm;
+            double tCG=tAC + ((double)states[4] / cumm);
+            double tGT=tCG + ((double)states[5] / cumm);
+            //printf("T1: %f  T2: %f  T3: %f\n", tAC, tCG,  tGT);
+            //printf("Primary: %c Secondary: %c\n",stateVector[0], stateVector[1]);
+                
+            for(int smp=0; smp < headerData->snipSize; smp++)
+            {
+                if(helperData->snipChar[smp] == 'N')
+                {
+                    double rVal=((double)rand()) / ((double)RAND_MAX);
+                    //printf("Rand Value: %f\n",rVal);
+                    if(rVal <= tAC)
+                    {
+                        helperData->snipChar[smp]='A';
+                        //printf("Pos[%d]: A\n",smp);
+                    }
+                    else if(rVal <= tCG)
+                    {
+                        helperData->snipChar[smp]='C';
+                        //printf("Pos[%d]: C\n",smp);
+                    }
+                    else if(rVal <= tGT)
+                    {
+                        helperData->snipChar[smp]='G';
+                        //printf("Pos[%d]: G\n",smp);
+                    }
+                    else
+                    {
+                        helperData->snipChar[smp]='T';
+                        //printf("Pos[%d]: T\n",smp);
+                    }
+                }
+            }
+
+            //printf("Line is now: %s\n",helperData->snipChar);
+        }
+        //-----------------------------------------------------------
+
         if(statesNum == -1)
         {
             fprintf(stderr, "\n\n ERROR: Empty alignment (no states found).\n\n");
             exit(1);
         }
+
         rnps_flag=removeNonPolymorphicSite(helperData->snipChar,
                                            headerData->snipSize,
                                            statesNum,
@@ -253,6 +327,7 @@ int writeToTable_x64(pre_t *preData,
     }
     else
         (*skippedLines)++;
+
     return 0;
 }
 

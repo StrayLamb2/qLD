@@ -18,7 +18,7 @@ qLD-parse-2MDF : $(OBJS)
 	$(CC) $(CFLAGS) -o $(EXECNAME) $(OBJS) $(LIBRARIES)
 
 build/%.o: src/%.c
-	$(CC) -g -o $@ -c $< $(CFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:
 	rm $(EXECNAME)

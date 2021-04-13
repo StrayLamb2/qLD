@@ -352,7 +352,10 @@ void dataShuffleKnuth(char * data, int startIndex, int endIndex)
     }
 }
 
-void getGTdata(char * string, char * stateVector, int statesTotal, char * sampleData)
+void getGTdata(char * string, 
+               char * stateVector, 
+               int statesTotal, 
+               char * sampleData)
 {
     int i, j=0, index=0, start=0, end=0, len=strlen(string);
     for(i=0;i < len;i++)
@@ -404,7 +407,10 @@ void processSampleVCF(helper_t *helperData,
         fprintf(stderr,"ERROR: Detected data bigger than the ploidy of input\n");
         exit(1);
     }
-    getGTdata(helperData->word, stateVector, statesALT, helperData->snipPart);
+    getGTdata(helperData->word, 
+              stateVector, 
+              statesALT, 
+              helperData->snipPart);
     helperData->snipPart[dataSize]='\0';
 
     if(helperData->snipCharIndex + dataSize >= helperData->snipCharLength)
@@ -456,10 +462,15 @@ int getDataType(int * states)
             return 5;
         return 4;
     }
+
+    //den eixe case gia to ola missing....
+    if(states[2] != 0)
+        return 6;
+
     return 0;
 }
 
-int determineStates(int snipSize, char * line, int states[STATESALL])
+int determineStates(int snipSize, char * line, int *states)
 {
     int i;
     for(i=0;i < snipSize;i++)
@@ -595,12 +606,11 @@ int removeNonPolymorphicSite(char* line, int snipSize,int states, int filterOut)
         return removeNonPolymorphicSiteBIN(line, snipSize, filterOut);
 
     if(states == 4 || states == 5)
-    {
-        // Discard missing data
-        if(states == 5)
-            return 1;
         return removeNonPolymorphicSiteDNA(line, snipSize, filterOut);
-    }
+
+    //den eixe case gia ola missing...
+    if(states == 6)
+        return 1;
     return 0;
 }
 

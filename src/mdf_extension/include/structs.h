@@ -27,6 +27,7 @@ typedef struct preprocess_t
     char **sampleList;
     int sampleListSize;
     int ploidy;
+    int impute;
 }pre_t;
 
 typedef struct header_t

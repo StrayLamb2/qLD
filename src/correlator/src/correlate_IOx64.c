@@ -356,14 +356,14 @@ void readTable_x64(threadData_t *threadData,
     int pos, eol, eof, status, counter=0, index;
     int skippedLines=0;
     inFileType fpIn;
-
+    
     for(int i=0; i < nodeData->filesListNum; i++)
     {
 
         eol=0;
         eof=0;
         fpIn = FOPEN(nodeData->filesList[i], "r");
-
+        
         if(fpIn == NULL)
         {
             fprintf(stderr,"ERROR: Failed to open file %s\n", nodeData->filesList[i]);
