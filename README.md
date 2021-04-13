@@ -1,4 +1,4 @@
-# qLD v0.2.1-develop: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
+# qLD v0.2.2: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
 
 quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
 
@@ -370,3 +370,6 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
             Minor fixes.
 * 0.2.1:    Using syrk method for single region calculations. 
             Several fixes.
+* 0.2.2:    Added random seed selection in parse-2MDF and compute.
+            Added -impute option in parse-2MDF to manipulate missing data.
+            More fixes.
