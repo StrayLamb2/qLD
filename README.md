@@ -10,7 +10,7 @@ quickLD is developed and tested in Linux distributions and should only work in L
 ### Clone the repository and get into the main directory
 
 ```
-git clone git@github.com:StrayLamb2/diploma_thesis.git
+git clone git@github.com:pephco/quickLD.git
 cd diploma_thesis
 ```
 
@@ -32,6 +32,19 @@ pip3 install -r heatmap_viewer_reqs.txt
 ```
 
 which installs the requirements to your global python packages.
+
+### Basic Execution
+The most basic execution, for diploid data, utilises these commands (change the appropriate fields to your values):
+
+```
+./bin/qLD-parseVCF -input 'PATH-TO-VCF' \
+                   -output 'NEW-DIR' \
+                   -size 10
+
+./bin/qLD-compute -input 'NEW-DIR' \
+                  -output 'OUTPUT-DIR' \
+                  -blis
+```
 
 ### Prerequisites
 
