@@ -11,7 +11,7 @@ quickLD is developed and tested in Linux distributions and should only work in L
 
 ```
 git clone git@github.com:pephco/quickLD.git
-cd diploma_thesis
+cd quickLD
 ```
 
 ### TL;WR
