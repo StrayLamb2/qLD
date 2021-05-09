@@ -1,4 +1,4 @@
-# quickLD v0.2.2: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
+# quickLD v0.2.3: High-performance Computation of Linkage Disequilibrium on CPUs and GPUs
 
 
 quickLD (qLD) is a tool to calculate Linkage disequilibrium (the non-random association between alleles at different loci), with highly efficient CPU and GPU kernels that utilize dense linear algebra (DLA) operations.
@@ -201,6 +201,7 @@ Every program has a help menu with all the arguments it uses, with a brief expla
 ```
 ./bin/qLD-parse-VCF -help
 
+```
 VCF_parser manual
 -----------------
 	-input       inputFile
@@ -211,6 +212,7 @@ VCF_parser manual
 	-posWmin     snip pos
 	-posWmax     snip pos
 	-inputList   inputFile
+	-chrom       chromosome
 	-toSingleOutput
 
 Description:
@@ -226,9 +228,9 @@ Description:
 	-posWmin   <INT>     pos of the minimum snip to be included, must be valid
 	-posWmax   <INT>     pos of the maximum snip to be included, must be valid
 	-inputList <STRING>  input text file with the pos to keep
+	-chrom     <STRING>  Specifies the chromosome to be extracted from the original VCF
 	-toSingleOutput      Used to generate a new VCF that is part of the input file,
 	                     -Wmin and -Wmax mandatory with this command
-```
 ```
 ./bin/qLD-parse-2MDF -help
 
@@ -382,3 +384,5 @@ This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.
 * 0.2.2:    Added random seed selection in parse-2MDF and compute.
             Added -impute option in parse-2MDF to manipulate missing data.
             More fixes.
+* 0.2.3:    Added -chrom flag to parser for VCF inputs with multiple chromosomes.
+            Minor fixes.
