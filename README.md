@@ -39,6 +39,7 @@ The most basic execution, for diploid data, utilises these commands (change the 
 ```
 ./bin/qLD-parseVCF -input 'PATH-TO-VCF' \
                    -output 'NEW-DIR' \
+		   -chrom 'CHROMOSOME' \
                    -size 10
 
 ./bin/qLD-compute -input 'NEW-DIR' \
